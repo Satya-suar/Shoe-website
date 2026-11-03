@@ -7,6 +7,6 @@
 
 export const environment = {
   production: true,
-  apiUrl: 'https://shoewebsite-api.runasp.net/api/ShoeWebsite',
-  imageUrl: 'https://shoewebsite-api.runasp.net/'
+  apiUrl: 'http://shoewebsite-api.runasp.net/api/ShoeWebsite',
+  imageUrl: 'http://shoewebsite-api.runasp.net/'
 };
