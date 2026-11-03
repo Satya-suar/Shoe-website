@@ -1,0 +1,46 @@
+<section class="section list-section">
+  <div class="container">
+   <ngx-spinner
+  bdColor="rgba(0,0,0,0.4)"
+  size="large"
+  color="#ffffff"
+  type="ball-scale-multiple"
+  [fullScreen]="true">
+  <p style="color:white; margin-top:15px;">
+    Loading Products...
+  </p>
+</ngx-spinner>
+
+  <div class="section-head">
+  <div>
+    <p class="eyebrow">Brand Collection</p>
+    <h2 class="section-title">
+      {{ brandName ? brandName + ' Shoes' : 'Products' }}
+    </h2>
+  </div>
+  <a routerLink="/brands" class="btn-view-all">
+    <i class="bi bi-arrow-left"></i> All Brands
+  </a>
+</div>
+
+<div *ngIf="productList.length === 0" class="empty-state">
+  No products found for this brand yet.
+</div>
+
+<div *ngIf="productList.length > 0" class="product-grid">
+  <app-card
+    *ngFor="let product of productList"
+    [product]="product">
+  </app-card>
+</div>
+
+
+    <div *ngIf="!isLoading && productList.length === 0" class="empty-state">
+      No products found for this brand yet.
+    </div>
+
+    <div *ngIf="!isLoading && productList.length > 0" class="product-grid">
+      <app-card *ngFor="let product of productList" [product]="product"></app-card>
+    </div>
+  </div>
+</section>

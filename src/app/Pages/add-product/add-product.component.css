@@ -1,0 +1,168 @@
+.product-page{
+    padding:40px;
+    background:#f8fafc;
+    min-height:100vh;
+}
+
+.premium-form{
+    max-width:750px;
+    margin:20px auto;
+    background:#fff;
+    padding:24px;
+    border-radius:20px;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+
+.form-header{
+    margin-bottom:25px;
+}
+
+.form-header h2{
+    font-size:32px;
+    margin-bottom:8px;
+}
+
+.form-header p{
+    color:#64748b;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+    margin-bottom:20px;
+}
+
+.form-group label{
+    font-weight:600;
+    margin-bottom:8px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea{
+    padding: 10px 14px;
+    border: 1px solid #dbe2ea;
+    border-radius: 10px;
+    font-size: 14px;
+}
+
+.full-width{
+    width:100%;
+}
+.upload-box{
+    position: relative;
+    border: 2px dashed #d1d5db;
+    border-radius: 15px;
+    min-height: 120px;
+    display: flex;
+    padding: 20px;
+    justify-content: center;
+    align-items: center;
+    background: #fafafa;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.upload-box:hover{
+    border-color: #111827;
+    background: #f4f4f5;
+}
+
+.upload-box input{
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.upload-content{
+    text-align: center;
+}
+
+.upload-content i{
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.preview-card{
+    display: flex;
+    /* flex-direction: column; */
+    align-items: center;
+    gap: 8px;
+    max-width: 120px;
+    margin-top: 10px;
+}
+
+.preview-card img{
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    padding: 4px;
+    background: white;
+}
+
+.replace-btn{
+    border: none;
+    background: #111827;
+    color: white;
+    padding: 6px 10px;
+    font-size: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+}
+.replace-btn i{
+   font-size: 18px;
+}
+
+.replace-btn:hover{
+    opacity: .9;
+}
+.image-preview img{
+    width: 210px;
+    height: 210px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    padding: 4px;
+    background: white;
+}
+.checkbox-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:20px;
+}
+.submit-btn{
+    width: 100%;
+    border: none;
+    padding: 16px;
+    border-radius: 16px;
+    background: #111827;
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all .3s ease;
+}
+
+.submit-btn:hover:not(:disabled){
+    transform: translateY(-2px);
+    box-shadow: 0 15px 35px rgba(17,24,39,.25);
+}
+
+.submit-btn:disabled{
+    background: #cbd5e1;
+    color: #64748b;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}

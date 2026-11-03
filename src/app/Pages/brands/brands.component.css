@@ -1,0 +1,98 @@
+.brands-section {
+  background: var(--paper);
+}
+
+.brand-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+.brand-card {
+  background: linear-gradient(145deg, #ffffff, #f7f7f7);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 20px;
+  padding: 28px 16px;
+  text-align: center;
+  text-decoration: none;
+  color: var(--ink);
+
+  position: relative;
+  overflow: hidden;
+
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.04),
+    0 12px 30px rgba(0, 0, 0, 0.08);
+
+  transition: all 0.35s ease;
+  transform-style: preserve-3d;
+}
+
+.brand-card:hover {
+  transform:
+    perspective(1000px)
+    rotateX(8deg)
+    rotateY(-8deg)
+    translateY(-10px);
+
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.12),
+    0 30px 60px rgba(0, 0, 0, 0.08);
+}
+.brand-logo-wrap {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+  transform: translateZ(25px);
+}
+
+.brand-logo-wrap img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  transition: transform 0.35s ease;
+}
+
+.brand-card:hover .brand-logo-wrap img {
+  transform: scale(1.12);
+}
+
+.brand-name {
+  font-weight: 700;
+  margin: 0;
+  font-size: 1rem;
+  transform: translateZ(15px);
+}
+
+.brand-add{
+  margin-top: 65px;
+  display: inline-flex;
+  /* justify-content: end; */
+  align-items:center;
+  gap: 8px;
+  font-family: var(--font-tag);
+  font-weight: 700;
+  font-size: 0.90rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 2px solid var(--volt-dark);
+  padding-bottom: 3px;
+  transition: gap 0.15s ease, color 0.15s ease;
+}
+
+.brand-add:hover{
+  gap: 10px;
+  color: var(--ember);
+  border-color: var(--ember);
+}
+.add-button{
+  display: flex;
+  justify-content: end;
+
+}
+
+
+

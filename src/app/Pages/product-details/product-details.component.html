@@ -1,0 +1,77 @@
+<section class="section details-section">
+  <div class="container">
+
+    <div *ngIf="isLoading" class="loader-row">
+      <div class="dot-spinner"></div>
+    </div>
+
+    <div *ngIf="!isLoading && notFound" class="empty-state">
+      <p>We couldn&rsquo;t find this product. It may have been removed.</p>
+      <a routerLink="/brands" class="btn-outline-ink">Back to Brands</a>
+    </div>
+    <a routerLink="/brands" class="btn-view-all mb-3">
+      <i class="bi bi-arrow-left"></i> Back to Brands
+    </a>
+
+    <div *ngIf="!isLoading && product" class="details-grid">
+
+
+
+      <div class="details-img">
+        <img [src]="imageUrl + product.productImage" [alt]="product.productName">
+        <span class="stock-chip" [class.out]="!product.isStock">
+          {{ product.isStock ? 'Available' : 'Out of Stock' }}
+        </span>
+      </div>
+
+      <div class="details-copy">
+        <p class="eyebrow">{{ product.brandName }}</p>
+        <h1 class="details-title">{{ product.productName }}</h1>
+
+        <div class="details-meta">
+  <div class="meta-chip chip-size">
+    <span>Size</span>{{ product.size }}
+  </div>
+
+  <div class="meta-chip chip-color">
+    <span>Color</span>{{ product.color }}
+  </div>
+
+  <div class="meta-chip chip-brand">
+    <span>Brand</span>{{ product.brandName }}
+  </div>
+</div>
+
+        <p class="details-price">{{ product.price | currency : 'INR' }}</p>
+        <p class="details-desc">{{ product.productDescription }}</p>
+
+
+        <div class="action-row">
+
+         <button *ngIf="product.isStock"
+        class="btn-buy"
+        (click)="openBuyForm()">
+
+  <i class="bi"
+     [class.bi-bag-check]="!showOrderForm"
+     [class.bi-x-circle]="showOrderForm">
+  </i>
+
+  {{ showOrderForm ? 'Close Form' : 'Buy Now' }}
+</button>
+        </div>
+
+        <div *ngIf="!product.isStock" class="oos-note">
+          <i class="bi bi-info-circle"></i> This shoe is currently out of stock. Please check back later.
+        </div>
+      </div>
+
+      <div class="details-form" *ngIf="product.isStock && showOrderForm">
+
+        <app-order-form [product]="product" (orderPlaced)="onOrderPlaced()">
+        </app-order-form>
+
+      </div>
+    </div>
+  </div>
+</section>

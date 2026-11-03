@@ -1,0 +1,129 @@
+<div class="brand-page">
+
+    <form
+        [formGroup]="brandForm"
+        (ngSubmit)="onSubmit()"
+        class="premium-form">
+
+        <!-- Header -->
+        <div class="form-header d-flex justify-content-between">
+
+            <div>
+                <h2>
+                    Add New Brand
+                    <i class="bi bi-tag-fill"></i>
+                </h2>
+
+                <p>
+                    Create a new brand for your shoe collection.
+                </p>
+            </div>
+
+            <div>
+                <a routerLink="/brands" class="btn-view-all">
+                    <i class="bi bi-arrow-left"></i>
+                    Back to Brands
+                </a>
+            </div>
+
+        </div>
+
+
+        <!-- Brand Name -->
+        <div class="form-group">
+
+            <label>Brand Name</label>
+
+            <input
+                type="text"
+                formControlName="brandName"
+                placeholder="Enter brand name">
+
+            <small
+                *ngIf="
+                    brandName?.touched &&
+                    brandName?.hasError('required')
+                ">
+
+                Brand name is required
+
+            </small>
+
+        </div>
+
+
+        <!-- Brand Logo -->
+        <div class="form-group">
+
+            <label>Brand Logo</label>
+
+            <!-- Hidden File Input -->
+            <input
+                #fileInput
+                type="file"
+                accept="image/*"
+                hidden
+                (change)="onFileSelect($event)">
+
+
+            <!-- Upload Box -->
+            <div
+                class="upload-box"
+                *ngIf="!imagePreview"
+                (click)="fileInput.click()">
+
+                <div class="upload-content">
+
+                    <i class="bi bi-cloud-arrow-up"></i>
+
+                    <h4>
+                        Upload Brand Logo
+                    </h4>
+
+                    <p>
+                        Click or drag your logo here
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Preview -->
+            <div
+                class="preview-card"
+                *ngIf="imagePreview">
+
+                <img
+                    [src]="imagePreview"
+                    alt="Brand Logo">
+
+                <button
+                    type="button"
+                    class="replace-btn"
+                    (click)="fileInput.click()">
+
+                    <i class="bi bi-arrow-repeat"></i>
+
+                    Replace
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- Submit -->
+        <button
+            type="submit"
+            class="submit-btn"
+            [disabled]="brandForm.invalid || !selectedFile">
+
+            Add Brand
+
+        </button>
+
+    </form>
+
+</div>

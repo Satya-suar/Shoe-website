@@ -1,0 +1,136 @@
+.shoe-card {
+  display: block;
+  background: #fff;
+  border-radius: 22px;
+  overflow: hidden;
+  color: var(--ink);
+  height: 100%;
+  position: relative;
+
+  border: 1px solid rgba(255, 255, 255, 0.4);
+
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.05),
+    0 15px 35px rgba(0, 0, 0, 0.08);
+
+  transition: all 0.35s ease;
+  transform-style: preserve-3d;
+}
+
+.shoe-card:hover {
+  transform:
+    perspective(1000px)
+    rotateX(4deg)
+    rotateY(-4deg)
+    translateY(-10px);
+
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.12),
+    0 30px 60px rgba(0, 0, 0, 0.08);
+}
+
+.shoe-card-img {
+  position: relative;
+  background: var(--paper-dim);
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+
+.shoe-card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.shoe-card:hover .shoe-card-img img {
+  transform: scale(1.06);
+}
+
+.stock-chip {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: var(--volt);
+  color: var(--ink);
+  font-family: var(--font-tag);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.stock-chip.out {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.shoe-card-body {
+  padding: 16px 16px 18px;
+}
+
+.shoe-brand {
+  font-family: var(--font-tag);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--slate);
+  margin: 0 0 4px;
+}
+
+.shoe-name {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 1rem;
+  margin: 0 0 8px;
+  color: var(--ink);
+}
+
+.shoe-meta {
+  font-size: 0.82rem;
+  color: var(--slate);
+  margin-bottom: 10px;
+}
+
+.shoe-meta .dot {
+  margin: 0 6px;
+}
+
+.shoe-price {
+  font-family: var(--font-tag);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--ink);
+  margin: 0;
+}
+
+.btn-viewdetails {
+  width: 100%;
+  margin-top: 14px;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 12px;
+  background: var(--ink);
+  color: var(--paper);
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.25s ease;
+}
+
+.btn-viewdetails:hover {
+  transform: translateY(-2px);
+  background: #000;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+}
+
+.btn-viewdetails i {
+  font-size: 1rem;
+}
+
+

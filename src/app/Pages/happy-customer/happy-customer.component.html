@@ -1,0 +1,35 @@
+<section class="section happy-section">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Word on the Street</p>
+        <h2 class="section-title">Happy Customers</h2>
+      </div>
+    </div>
+
+    <div class="customer-grid">
+      <div class="customer-card" *ngFor="let customer of customers">
+        <div class="quote-mark">&ldquo;</div>
+        <p class="review-text">{{ customer.review }}</p>
+
+        <div class="rating">
+          <i class="bi" *ngFor="let star of stars" [class.bi-star-fill]="star <= customer.rating"
+            [class.bi-star]="star > customer.rating">
+          </i>
+
+          <span class="rating-number">
+            {{ customer.rating }}/5
+          </span>
+        </div>
+
+        <div class="customer-info">
+          <img [src]="customer.image" [alt]="customer.name" class="customer-avatar">
+          <div>
+            <p class="customer-name">{{ customer.name }}</p>
+            <p class="customer-time"><i class="bi bi-clock"></i> {{ customer.postedAgo }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

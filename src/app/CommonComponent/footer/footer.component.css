@@ -1,0 +1,80 @@
+.kart-footer {
+  background: var(--ink);
+  color: rgba(247, 245, 241, 0.75);
+  padding: 56px 0 24px;
+  margin-top: 40px;
+}
+
+.kart-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--paper);
+  text-decoration: none;
+  margin-bottom: 12px;
+}
+
+.logo-mark {
+  background: var(--volt);
+  color: var(--ink);
+  font-family: var(--font-tag);
+  font-weight: 700;
+  font-size: 0.8rem;
+  padding: 6px 8px;
+  border-radius: 6px;
+  line-height: 1;
+}
+
+.footer-tag {
+  max-width: 320px;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.footer-heading {
+  font-family: var(--font-tag);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.8rem;
+  color: var(--volt);
+  margin-bottom: 14px;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 0.92rem;
+}
+
+.footer-links a {
+  color: rgba(247, 245, 241, 0.75);
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  color: var(--volt);
+}
+
+.footer-links i {
+  width: 18px;
+  color: var(--volt);
+}
+
+.footer-rule {
+  border-color: rgba(247, 245, 241, 0.15);
+  margin: 36px 0 18px;
+}
+
+.footer-bottom {
+  text-align: center;
+  font-size: 0.82rem;
+  color: rgba(247, 245, 241, 0.5);
+  margin: 0;
+}

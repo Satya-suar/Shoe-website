@@ -1,0 +1,35 @@
+<nav class="navbar navbar-expand-lg sticky-top kart-nav">
+  <div class="container">
+    <a class="navbar-brand kart-logo" routerLink="/">
+      <span class="logo-mark">SK</span>ShoeKart
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+      aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="mainNav">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 text-center align-items-lg-center">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"><i class="bi bi-house"></i> Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#about" routerLinkActive="active"><i class="bi bi-info-circle"></i> About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link"  routerLinkActive="active"><i class="bi bi-bag"></i> Shop</a>
+        </li>
+        <li  class="nav-item">
+          <a class="nav-link" routerLink="/add-product" routerLinkActive="active">Add Product <i class="bi bi-box-seam"></i></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/orders" routerLinkActive="active"><i class="bi bi-cart"></i> My Orders</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#contact" routerLinkActive="active"><i class="bi bi-headset"></i> Contact Us</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

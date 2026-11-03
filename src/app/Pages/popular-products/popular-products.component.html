@@ -1,0 +1,23 @@
+<section class="section popular-section" id="popular">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Flying Off the Shelf</p>
+        <h2 class="section-title">Popular Products</h2>
+      </div>
+      
+    </div>
+
+    <div *ngIf="isLoading" class="loader-row">
+      <div class="dot-spinner"></div>
+    </div>
+
+    <div *ngIf="!isLoading && productList.length === 0" class="empty-state">
+      No popular products yet. Please check back soon.
+    </div>
+
+    <div *ngIf="!isLoading && productList.length > 0" class="product-grid">
+      <app-card *ngFor="let product of productList" [product]="product"></app-card>
+    </div>
+  </div>
+</section>

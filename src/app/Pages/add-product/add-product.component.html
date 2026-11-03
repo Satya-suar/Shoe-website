@@ -1,0 +1,153 @@
+<form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="premium-form">
+
+    <h2>Add Product</h2>
+
+    <div class="grid">
+
+        <!-- Brand -->
+        <div class="form-group">
+            <label>Brand</label>
+
+            <select formControlName="brandId">
+                <option value="">Select Brand</option>
+
+                <option *ngFor="let brand of brands" [value]="brand.brandId">
+                    {{ brand.brandName }}
+                </option>
+            </select>
+
+            <small *ngIf="productForm.get('brandId')?.touched &&
+                    productForm.get('brandId')?.invalid">
+                Brand is required
+            </small>
+        </div>
+
+        <!-- Product Name -->
+        <div class="form-group">
+            <label>Product Name</label>
+
+            <input type="text" formControlName="productName" placeholder="Nike Air Max">
+        </div>
+
+        <!-- Size -->
+        <div class="form-group">
+            <label>Size</label>
+
+            <input type="text" formControlName="size" placeholder="9">
+        </div>
+
+        <!-- Color -->
+        <div class="form-group">
+            <label>Color</label>
+
+            <input type="text" formControlName="color" placeholder="Black">
+        </div>
+
+        <!-- Price -->
+        <div class="form-group">
+            <label>Price</label>
+
+            <input type="text" formControlName="price" placeholder="5999">
+        </div>
+
+        <!-- Image -->
+        <!-- Product Image -->
+
+<div class="form-group full-width">
+
+    <label>Product Image</label>
+
+    <!-- Upload Box -->
+
+    <div class="upload-box" *ngIf="!imagePreview">
+
+        <input
+            #productImageInput
+            type="file"
+            accept="image/*"
+            (change)="onFileSelected($event)">
+
+        <div class="upload-content">
+            <i class="bi bi-cloud-upload"></i>
+            <h4>Upload Product Image</h4>
+            <p>PNG, JPG or WEBP</p>
+        </div>
+
+    </div>
+
+    <!-- Preview -->
+
+    <div class="preview-card" *ngIf="imagePreview">
+
+        <img
+            [src]="imagePreview"
+            alt="Product Image">
+
+        <button
+            type="button"
+            class="replace-btn"
+            (click)="productImageInput.click()">
+
+            <i class="bi bi-arrow-repeat"></i>
+
+        </button>
+
+        <input
+            hidden
+            #productImageInput
+            type="file"
+            accept="image/*"
+            (change)="onFileSelected($event)">
+
+    </div>
+
+</div>
+
+    </div>
+
+    <!-- Image Preview -->
+
+    <div class="image-preview" *ngIf="imagePreview">
+        <img [src]="imagePreview">
+    </div>
+
+    <!-- Description -->
+
+    <div class="form-group full-width">
+        <label>Description</label>
+
+        <textarea rows="5" formControlName="productDescription"
+            placeholder="Write detailed product description..."></textarea>
+    </div>
+
+    <!-- Toggles -->
+
+    <div class="checkbox-row">
+
+        <label class="check-box">
+            <input type="checkbox" formControlName="isStock">
+            In Stock
+        </label>
+
+        <label class="check-box">
+            <input type="checkbox" formControlName="isPopular">
+            Popular Product
+        </label>
+
+        <label class="check-box">
+            <input type="checkbox" formControlName="isActive">
+            Active
+        </label>
+
+    </div>
+
+    <button
+  type="submit"
+  class="submit-btn"
+  [disabled]="!productForm.valid || selectedFile === null">
+
+  Save Product
+
+</button>
+
+</form>

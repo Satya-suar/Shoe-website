@@ -1,0 +1,40 @@
+<section class="section brands-section">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Trusted Names</p>
+        <h2 class="section-title">Shop by Brand</h2>
+      </div>
+      <a *ngIf="showViewAll" routerLink="/brands" class="btn-view-all">View All Brands <i class="bi bi-arrow-right"></i></a>
+      <a *ngIf="!showViewAll" routerLink="/" class="btn-view-all">
+    <i class="bi bi-arrow-left"></i>
+    Back to Home
+  </a>
+    </div>
+
+    <div *ngIf="isLoading" class="loader-row">
+      <div class="dot-spinner"></div>
+    </div>
+
+    <div *ngIf="!isLoading && brandList.length === 0" class="empty-state">
+      No brands to show right now. Please check back soon.
+    </div>
+    
+
+    <div *ngIf="!isLoading && brandList.length > 0" class="brand-grid">
+      <a *ngFor="let brand of brandList" [routerLink]="['/products']" [queryParams]="{ brandId: brand.brandId }"
+        class="brand-card">
+        <div class="brand-logo-wrap">
+          <img [src]="imageUrl + brand.brandLogo" [alt]="brand.brandName">
+        </div>
+        <p class="brand-name">{{ brand.brandName }}</p>
+      </a>
+    </div>
+
+    <div  class="add-button">
+    <a class="brand-add" routerLink="/add-brand"  *ngIf="!showViewAll">Add Brand <i class="bi bi-tag-fill"></i></a>
+    </div>
+
+
+  </div>
+</section>

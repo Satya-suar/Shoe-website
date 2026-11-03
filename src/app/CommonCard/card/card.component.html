@@ -1,0 +1,22 @@
+<div class="shoe-card text-decoration-none">
+  <div class="shoe-card-img">
+    <img [src]="imageUrl + product.productImage" [alt]="product.productName">
+    <span class="stock-chip" [class.out]="!product.isStock">
+      {{ product.isStock ? 'Available' : 'Out of Stock' }}
+    </span>
+  </div>
+
+  <div class="shoe-card-body">
+    <p class="shoe-brand">{{ product.brandName }}</p>
+    <h3 class="shoe-name">{{ product.productName }}</h3>
+
+    <div class="shoe-meta">
+      <span>Size {{ product.size }}</span>
+      <span class="dot">&bull;</span>
+      <span>{{ product.color }}</span>
+    </div>
+
+    <p class="shoe-price">{{ product.price |currency:'INR'}}</p>
+    <button class="btn-viewdetails btn btn-outline-ink mt-2" [routerLink]="['/products', product.productId]"><i class="bi bi-eye"></i> View Details</button>
+  </div>
+</div>

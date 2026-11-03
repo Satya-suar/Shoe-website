@@ -1,0 +1,43 @@
+<div class="order-form-wrap">
+  <p class="eyebrow">Almost There</p>
+  <h3 class="form-title">Buy It Now</h3>
+
+  <form [formGroup]="orderForm" (ngSubmit)="submitOrder()" novalidate>
+
+    <div class="form-row">
+      <label>Full Name</label>
+      <input type="text" class="form-control" formControlName="customerName" placeholder="e.g. Rahul Sharma">
+      <p class="err-text" *ngIf="f['customerName'].touched && f['customerName'].invalid">
+        Please enter your full name (at least 3 characters).
+      </p>
+    </div>
+
+    <div class="form-row">
+      <label>Mobile Number</label>
+      <input type="text" class="form-control" formControlName="mobileNumber" placeholder="10 digit mobile number" maxlength="10">
+      <p class="err-text" *ngIf="f['mobileNumber'].touched && f['mobileNumber'].invalid">
+        Please enter a valid 10 digit mobile number.
+      </p>
+    </div>
+
+    <div class="form-row">
+      <label>Email</label>
+      <input type="email" class="form-control" formControlName="email" placeholder="you&#64;example.com">
+      <p class="err-text" *ngIf="f['email'].touched && f['email'].invalid">
+        Please enter a valid email address.
+      </p>
+    </div>
+
+    <div class="form-row">
+      <label>Delivery Address</label>
+      <textarea class="form-control" rows="3" formControlName="address" placeholder="House no, street, city, pincode"></textarea>
+      <p class="err-text" *ngIf="f['address'].touched && f['address'].invalid">
+        Please enter a complete address (at least 10 characters).
+      </p>
+    </div>
+
+    <button type="submit" class="btn-volt w-100" [disabled]="isSubmitting">
+      {{ isSubmitting ? 'Placing Order...' : 'Confirm Order' }}
+    </button>
+  </form>
+</div>

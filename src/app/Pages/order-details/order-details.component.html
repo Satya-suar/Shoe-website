@@ -1,0 +1,61 @@
+<section class="section orders-section">
+  <div class="container">
+    <p class="eyebrow">Order History</p>
+    <h2 class="section-title mb-4">My Orders</h2>
+
+    <div *ngIf="isLoading" class="loader-row">
+      <div class="dot-spinner"></div>
+    </div>
+
+    <div *ngIf="!isLoading && orderList.length === 0" class="empty-state">
+      <p>No orders placed yet.</p>
+      <a routerLink="/shop" class="btn-outline-ink">Start Shopping</a>
+    </div>
+
+    <div *ngIf="!isLoading && orderList.length > 0" class="order-list">
+      <div class="order-row" *ngFor="let order of orderList">
+
+        <img
+          [src]="imageUrl + order.productImage"
+          [alt]="order.productName"
+          class="order-img">
+
+        <div class="order-info">
+          <p class="order-brand">{{ order.brandName }}</p>
+
+          <h3 class="order-name">{{ order.productName }}</h3>
+
+          <p class="order-customer">
+            <i class="bi bi-person"></i>
+            {{ order.customerName }}
+          </p>
+
+          <p class="order-mobile">
+            <i class="bi bi-telephone"></i>
+            {{ order.mobileNumber }}
+          </p>
+
+          <p class="order-email">
+            <i class="bi bi-envelope"></i>
+            {{ order.email }}
+          </p>
+
+          <p class="order-address">
+            <i class="bi bi-geo-alt"></i>
+            {{ order.address }}
+          </p>
+
+          <p class="order-date">
+            <i class="bi bi-calendar-event"></i>
+            {{ order.orderDate | date:'dd MMM yyyy' }}
+          </p>
+        </div>
+
+        <div class="order-price">
+          ₹{{ order.productPrice }}
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
