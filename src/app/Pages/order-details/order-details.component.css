@@ -1,67 +1,172 @@
-.orders-section {
-  min-height: 60vh;
+.orders-section { min-height: 60vh; }
+
+.section-head { margin-bottom: 36px; }
+.section-head .eyebrow { margin-bottom: 10px; }
+
+.order-count {
+  padding: 7px 16px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(245,239,230,.04);
+  color: var(--ink-soft);
+  font-family: var(--font-tag);
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
 }
 
+.empty-state p { margin: 0 0 20px; }
+.btn-outline-ink { text-decoration: none; }
+
+/* ---------- List ---------- */
 .order-list {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
 }
 
 .order-row {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 18px;
-  background: var(--white);
+  gap: 24px;
+  padding: 18px 26px 18px 18px;
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--crimson);
   border-radius: var(--radius);
-  padding: 14px 18px;
+  background: linear-gradient(180deg, rgba(245,239,230,.05), rgba(245,239,230,.012));
   box-shadow: var(--shadow-sm);
+  transition: border-color .3s ease, box-shadow .3s ease, background .3s ease;
 }
-.order-row:hover{
+.order-row:hover {
+  border-color: rgba(245,239,230,.28);
+  border-left-color: var(--crimson-bright);
+  background: linear-gradient(180deg, rgba(179,18,31,.1), rgba(245,239,230,.012));
   box-shadow: var(--shadow-md);
 }
-.btn-outline-ink{
-  text-decoration: none;
-  
-}
 
+/* ---------- Image ---------- */
+.order-thumb {
+  flex: none;
+  padding: 5px;
+  border: 1px solid var(--line);
+  background: rgba(245,239,230,.03);
+}
 .order-img {
-  width: 72px;
-  height: 72px;
+  display: block;
+  width: 96px;
+  height: 96px;
   object-fit: cover;
-  border-radius: 10px;
   background: var(--paper-dim);
-  flex-shrink: 0;
 }
 
-.order-info {
-  flex: 1;
-}
+/* ---------- Info ---------- */
+.order-info { flex: 1; min-width: 0; }
 
+.order-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
 .order-brand {
+  margin: 0;
   font-family: var(--font-tag);
-  font-size: 0.7rem;
+  font-size: .7rem;
+  font-weight: 600;
+  letter-spacing: .2em;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--slate);
-  margin: 0 0 2px;
+  color: var(--crimson-bright);
+}
+.order-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--ink-soft);
+  font-size: .74rem;
+  font-weight: 500;
 }
 
 .order-name {
-  font-family: var(--font-body);
-  font-size: 1rem;
-  font-weight: 700;
-  margin: 0 0 4px;
+  margin: 0 0 12px;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--ivory);
 }
 
-.order-customer {
-  font-size: 0.82rem;
-  color: var(--slate);
+.order-details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px 24px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+.order-details p {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
   margin: 0;
+  color: var(--slate);
+  font-size: .84rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.order-details i { flex: none; margin-top: 2px; color: var(--crimson-bright); }
+.order-address { grid-column: 1 / -1; }
+
+/* ---------- Price ---------- */
+.order-price {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  padding-left: 24px;
+  border-left: 1px solid var(--line);
+  align-self: stretch;
+  justify-content: center;
+}
+.price-label {
+  font-family: var(--font-tag);
+  font-size: .66rem;
+  font-weight: 600;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--slate);
+}
+.price-value {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--ivory);
+  white-space: nowrap;
 }
 
-.order-price {
-  font-family: var(--font-tag);
-  font-weight: 700;
-  font-size: 1.1rem;
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  .order-row {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px;
+  }
+  .order-info { flex-basis: calc(100% - 130px); }
+  .order-img { width: 80px; height: 80px; }
+  .order-details { grid-template-columns: 1fr; }
+  .order-price {
+    flex-basis: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 0 0;
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
 }

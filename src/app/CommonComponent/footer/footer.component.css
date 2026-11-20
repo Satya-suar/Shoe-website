@@ -1,4 +1,6 @@
-/* ===== Footer: Classic Premium · Black · Oxblood · Ivory (gold only on eyebrow) ===== */
+
+/* ===== Footer: Classic Premium · Black · Oxblood · Ivory ===== */
+
 :host {
   display: block;
 }
@@ -6,11 +8,18 @@
 .kart-footer {
   position: relative;
   overflow: hidden;
-  margin-top: 40px;
   padding: 96px 0 28px;
   background:
-    radial-gradient(70% 80% at 100% 100%, rgba(179, 18, 31, 0.34) 0%, transparent 65%),
-    radial-gradient(50% 60% at 0% 0%, rgba(58, 10, 16, 0.85) 0%, transparent 70%),
+    radial-gradient(
+      70% 80% at 100% 100%,
+      rgba(179, 18, 31, 0.34) 0%,
+      transparent 65%
+    ),
+    radial-gradient(
+      50% 60% at 0% 0%,
+      rgba(58, 10, 16, 0.85) 0%,
+      transparent 70%
+    ),
     #08080a;
   color: var(--ink-soft, #cfc8bd);
   border-top: 1px solid var(--line, rgba(245, 239, 230, 0.14));
@@ -21,14 +30,20 @@
   z-index: 2;
 }
 
-/* red line that draws across the top when the footer appears */
+/* Red animated top line */
+
 .footer-topline {
   position: absolute;
   top: -1px;
   left: 0;
   width: 100%;
   height: 2px;
-  background: linear-gradient(90deg, transparent, var(--crimson-bright, #d71f2d) 50%, transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--crimson-bright, #d71f2d) 50%,
+    transparent
+  );
   transform: scaleX(0);
   transform-origin: center;
   transition: transform 1.3s cubic-bezier(0.2, 0.7, 0.2, 1);
@@ -39,56 +54,44 @@
   transform: scaleX(1);
 }
 
-/* slow breathing glow */
+/* Slow breathing glow */
+
 .footer-glow {
   position: absolute;
   right: -10%;
   bottom: -30%;
   width: 60%;
   height: 80%;
-  background: radial-gradient(closest-side, rgba(215, 31, 45, 0.3), transparent 70%);
+  background: radial-gradient(
+    closest-side,
+    rgba(215, 31, 45, 0.3),
+    transparent 70%
+  );
   filter: blur(20px);
   animation: breathe 7s ease-in-out infinite;
   pointer-events: none;
 }
 
 @keyframes breathe {
-  0%, 100% { opacity: 0.55; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.12); }
+  0%, 100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.12);
+  }
 }
 
-/* big outlined watermark behind the content */
-.footer-watermark {
-  position: absolute;
-  left: 50%;
-  bottom: -0.22em;
-  z-index: 1;
-  transform: translate(-50%, 40%);
-  font-family: var(--font-display, Georgia, serif);
-  font-size: clamp(4.5rem, 17vw, 14rem);
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: 0.04em;
-  white-space: nowrap;
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(245, 239, 230, 0.09);
-  opacity: 0;
-  transition: transform 1.6s cubic-bezier(0.2, 0.7, 0.2, 1) 0.3s, opacity 1.6s ease 0.3s;
-  pointer-events: none;
-  user-select: none;
-}
+/* Generic scroll reveal */
 
-.in-view .footer-watermark {
-  transform: translate(-50%, 0);
-  opacity: 1;
-}
-
-/* ---------- Generic scroll reveal ---------- */
 .reveal {
   opacity: 0;
   transform: translateY(26px);
-  transition: opacity 0.8s ease var(--d, 0s),
-              transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) var(--d, 0s);
+  transition:
+    opacity 0.8s ease var(--d, 0s),
+    transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) var(--d, 0s);
 }
 
 .in-view .reveal {
@@ -96,7 +99,8 @@
   transform: none;
 }
 
-/* ---------- Logo (letters slide up one by one) ---------- */
+/* Logo */
+
 .kart-logo {
   display: inline-flex;
   align-items: center;
@@ -124,7 +128,9 @@
   line-height: 1;
   opacity: 0;
   transform: scale(0.6) rotate(-12deg);
-  transition: opacity 0.6s ease, transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition:
+    opacity 0.6s ease,
+    transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .in-view .logo-mark {
@@ -132,7 +138,8 @@
   transform: none;
 }
 
-/* shine sweeping across the mark */
+/* Logo shine */
+
 .logo-mark::after {
   content: "";
   position: absolute;
@@ -140,14 +147,24 @@
   left: -80%;
   width: 50%;
   height: 100%;
-  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  background: linear-gradient(
+    100deg,
+    transparent,
+    rgba(255, 255, 255, 0.45),
+    transparent
+  );
   transform: skewX(-20deg);
   animation: shine 5s ease-in-out 1.5s infinite;
 }
 
 @keyframes shine {
-  0% { left: -80%; }
-  30%, 100% { left: 160%; }
+  0% {
+    left: -80%;
+  }
+
+  30%, 100% {
+    left: 160%;
+  }
 }
 
 .logo-word {
@@ -159,22 +176,28 @@
 .letter {
   display: inline-block;
   transform: translateY(115%);
-  transition: transform 0.75s cubic-bezier(0.2, 0.7, 0.2, 1) calc(var(--i, 0) * 0.07s + 0.2s);
+  transition: transform 0.75s cubic-bezier(0.2, 0.7, 0.2, 1)
+    calc(var(--i, 0) * 0.07s + 0.2s);
 }
 
 .in-view .letter {
   transform: none;
 }
 
-/* letters hop in a wave on hover */
+/* Logo hover */
+
 .kart-logo:hover .letter {
   animation: hop 0.5s ease calc(var(--i, 0) * 0.05s);
   color: var(--crimson-bright, #d71f2d);
 }
 
 @keyframes hop {
-  50% { transform: translateY(-6px); }
+  50% {
+    transform: translateY(-6px);
+  }
 }
+
+/* Description */
 
 .footer-tag {
   max-width: 340px;
@@ -183,7 +206,8 @@
   line-height: 1.7;
 }
 
-/* rotating words: "Made to [walk fast]" */
+/* Rotating tagline */
+
 .footer-rotate {
   display: flex;
   align-items: center;
@@ -217,14 +241,29 @@
 }
 
 @keyframes rotate-words {
-  0%, 22%   { transform: translateY(0); }
-  25%, 47%  { transform: translateY(-1.6em); }
-  50%, 72%  { transform: translateY(-3.2em); }
-  75%, 97%  { transform: translateY(-4.8em); }
-  100%      { transform: translateY(-6.4em); }
+  0%, 22% {
+    transform: translateY(0);
+  }
+
+  25%, 47% {
+    transform: translateY(-1.6em);
+  }
+
+  50%, 72% {
+    transform: translateY(-3.2em);
+  }
+
+  75%, 97% {
+    transform: translateY(-4.8em);
+  }
+
+  100% {
+    transform: translateY(-6.4em);
+  }
 }
 
-/* ---------- Social icons ---------- */
+/* Social icons */
+
 .footer-eyebrow {
   margin-bottom: 16px;
 }
@@ -241,8 +280,10 @@
 .social-item {
   opacity: 0;
   transform: translateY(24px) scale(0.5);
-  transition: opacity 0.5s ease calc(0.65s + var(--i, 0) * 0.1s),
-              transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) calc(0.65s + var(--i, 0) * 0.1s);
+  transition:
+    opacity 0.5s ease calc(0.65s + var(--i, 0) * 0.1s),
+    transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1)
+      calc(0.65s + var(--i, 0) * 0.1s);
 }
 
 .in-view .social-item {
@@ -262,13 +303,15 @@
   color: var(--ivory, #f5efe6);
   font-size: 1.1rem;
   text-decoration: none;
-  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
-              background 0.3s ease,
-              border-color 0.3s ease,
-              box-shadow 0.3s ease;
+  transition:
+    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+    background 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
-/* expanding ring on hover */
+/* Expanding hover ring */
+
 .social-link::before {
   content: "";
   position: absolute;
@@ -278,7 +321,8 @@
   opacity: 0;
 }
 
-/* icon flips (3D) on hover */
+/* 3D icon flip */
+
 .social-link i {
   display: inline-block;
   transform: perspective(300px) rotateY(0deg);
@@ -301,11 +345,19 @@
 }
 
 @keyframes ring {
-  0%   { opacity: 0.9; transform: scale(1); }
-  100% { opacity: 0;   transform: scale(1.7); }
+  0% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.7);
+  }
 }
 
-/* ---------- Headings & links ---------- */
+/* Headings and links */
+
 .footer-heading {
   position: relative;
   margin: 0 0 22px;
@@ -333,6 +385,8 @@
   width: 34px;
 }
 
+/* Footer links */
+
 .footer-links {
   display: flex;
   flex-direction: column;
@@ -349,10 +403,13 @@
   padding-bottom: 2px;
   color: var(--ink-soft, #cfc8bd);
   text-decoration: none;
-  transition: color 0.3s ease, transform 0.3s ease;
+  transition:
+    color 0.3s ease,
+    transform 0.3s ease;
 }
 
-/* underline that slides in on hover */
+/* Underline hover animation */
+
 .footer-links a::after {
   content: "";
   position: absolute;
@@ -375,6 +432,8 @@
   transform: scaleX(1);
 }
 
+/* Contact information */
+
 .footer-contact li {
   display: flex;
   align-items: center;
@@ -393,16 +452,31 @@
   color: var(--ivory, #f5efe6);
   font-size: 0.8rem;
   transform: perspective(300px) rotateY(0deg);
-  transition: background 0.3s ease, transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+  transition:
+    background 0.3s ease,
+    transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
 }
 
-/* contact icons flip on hover too */
+/* Contact icon hover */
+
 .footer-contact li:hover i {
   background: var(--crimson, #b3121f);
   transform: perspective(300px) rotateY(360deg);
 }
 
-/* ---------- Bottom bar ---------- */
+/* ==========================================
+   BOTTOM BAR LAYERING FIX
+   Only functional addition to original CSS
+========================================== */
+
+.footer-bar {
+  position: relative;
+  z-index: 2;
+  background: rgba(8, 8, 10, 0.90);
+}
+
+/* Bottom bar */
+
 .footer-rule {
   height: 1px;
   margin: 56px 0 22px;
@@ -435,7 +509,7 @@
 .footer-bottom p {
   margin: 0;
   font-size: 0.82rem;
-  color: var(--slate, rgba(245, 239, 230, 0.62));
+  color: #ffffff;
 }
 
 .footer-made i {
@@ -446,13 +520,25 @@
 }
 
 @keyframes beat {
-  0%, 60%, 100% { transform: scale(1); }
-  15% { transform: scale(1.3); }
-  30% { transform: scale(1); }
-  45% { transform: scale(1.2); }
+  0%, 60%, 100% {
+    transform: scale(1);
+  }
+
+  15% {
+    transform: scale(1.3);
+  }
+
+  30% {
+    transform: scale(1);
+  }
+
+  45% {
+    transform: scale(1.2);
+  }
 }
 
-/* ---------- Responsive ---------- */
+/* Responsive */
+
 @media (max-width: 767.98px) {
   .kart-footer {
     padding: 72px 0 24px;
@@ -464,14 +550,14 @@
   }
 }
 
-/* ---------- Respect reduced motion ---------- */
+/* Respect reduced motion */
+
 @media (prefers-reduced-motion: reduce) {
   .reveal,
   .letter,
   .social-item,
   .logo-mark,
   .footer-topline,
-  .footer-watermark,
   .footer-rule,
   .footer-bottom {
     opacity: 1;
@@ -499,5 +585,42 @@
   .rotator-track,
   .footer-made i {
     animation: none;
+  }
+}
+
+/* Particle canvas */
+
+.footer-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Soft red spotlight */
+
+.footer-spot {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(
+    360px circle at var(--mx, 50%) var(--my, 100%),
+    rgba(215, 31, 45, 0.16),
+    transparent 65%
+  );
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.kart-footer:hover .footer-spot {
+  opacity: 1;
+}
+
+@media (hover: none), (prefers-reduced-motion: reduce) {
+  .footer-spot {
+    display: none;
   }
 }

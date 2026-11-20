@@ -1,7 +1,15 @@
 <section class="section orders-section">
   <div class="container">
-    <p class="eyebrow">Order History</p>
-    <h2 class="section-title mb-4">My Orders</h2>
+
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Order History</p>
+        <h2 class="section-title">My Orders</h2>
+      </div>
+      <span class="order-count" *ngIf="!isLoading && orderList.length > 0">
+        {{ orderList.length }} {{ orderList.length === 1 ? 'order' : 'orders' }}
+      </span>
+    </div>
 
     <div *ngIf="isLoading" class="loader-row">
       <div class="dot-spinner"></div>
@@ -13,49 +21,37 @@
     </div>
 
     <div *ngIf="!isLoading && orderList.length > 0" class="order-list">
-      <div class="order-row" *ngFor="let order of orderList">
+      <article class="order-row" *ngFor="let order of orderList">
 
-        <img
-          [src]="imageUrl + order.productImage"
-          [alt]="order.productName"
-          class="order-img">
+        <div class="order-thumb">
+          <img [src]="imageUrl + order.productImage" [alt]="order.productName" class="order-img">
+        </div>
 
         <div class="order-info">
-          <p class="order-brand">{{ order.brandName }}</p>
+          <div class="order-top">
+            <p class="order-brand">{{ order.brandName }}</p>
+            <span class="order-date">
+              <i class="bi bi-calendar-event"></i>
+              {{ order.orderDate | date:'dd MMM yyyy' }}
+            </span>
+          </div>
 
           <h3 class="order-name">{{ order.productName }}</h3>
 
-          <p class="order-customer">
-            <i class="bi bi-person"></i>
-            {{ order.customerName }}
-          </p>
-
-          <p class="order-mobile">
-            <i class="bi bi-telephone"></i>
-            {{ order.mobileNumber }}
-          </p>
-
-          <p class="order-email">
-            <i class="bi bi-envelope"></i>
-            {{ order.email }}
-          </p>
-
-          <p class="order-address">
-            <i class="bi bi-geo-alt"></i>
-            {{ order.address }}
-          </p>
-
-          <p class="order-date">
-            <i class="bi bi-calendar-event"></i>
-            {{ order.orderDate | date:'dd MMM yyyy' }}
-          </p>
+          <div class="order-details">
+            <p class="order-customer"><i class="bi bi-person"></i>{{ order.customerName }}</p>
+            <p class="order-mobile"><i class="bi bi-telephone"></i>{{ order.mobileNumber }}</p>
+            <p class="order-email"><i class="bi bi-envelope"></i>{{ order.email }}</p>
+            <p class="order-address"><i class="bi bi-geo-alt"></i>{{ order.address }}</p>
+          </div>
         </div>
 
         <div class="order-price">
-          ₹{{ order.productPrice }}
+          <span class="price-label">Total</span>
+          <span class="price-value">₹{{ order.productPrice }}</span>
         </div>
 
-      </div>
+      </article>
     </div>
   </div>
 </section>

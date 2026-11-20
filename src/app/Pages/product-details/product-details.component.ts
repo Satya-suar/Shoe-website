@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MyServiceService } from '../../Common-Service/my-service.service';
 import { OrderFormComponent } from '../order-form/order-form.component';
@@ -10,7 +10,7 @@ import { OrderFormComponent } from '../order-form/order-form.component';
   templateUrl: './product-details.component.html',
   styleUrl: './product-details.component.css'
 })
-export class ProductDetailsComponent {
+export class ProductDetailsComponent implements OnInit, OnDestroy {
 
   product: any = null;
   isLoading = true;
@@ -24,8 +24,24 @@ export class ProductDetailsComponent {
   ) {
     this.imageUrl = this.myService.imageUrl;
   }
-   openBuyForm() {
-    this.showOrderForm = !this.showOrderForm;
+
+  // opens the popup (no longer toggles)
+  openBuyForm() {
+    this.showOrderForm = true;
+    document.body.style.overflow = 'hidden';   // lock page scroll behind the popup
+  }
+
+  closeBuyForm() {
+    this.showOrderForm = false;
+    document.body.style.overflow = '';
+  }
+
+  // close popup with the Esc key
+  @HostListener('document:keydown.escape')
+  onEscape() {
+    if (this.showOrderForm) {
+      this.closeBuyForm();
+    }
   }
 
   ngOnInit(): void {
@@ -35,6 +51,10 @@ export class ProductDetailsComponent {
         this.loadProduct(id);
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    document.body.style.overflow = '';          // release scroll lock when leaving the page
   }
 
   loadProduct(id: number) {
@@ -57,7 +77,7 @@ export class ProductDetailsComponent {
   onOrderPlaced() {
     if (this.product) {
       this.product.isStock = false;
-       this.showOrderForm = false;
     }
+    this.closeBuyForm();
   }
 }
