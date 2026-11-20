@@ -1,34 +1,81 @@
-<footer class="kart-footer">
-  <div class="container">
-    <div class="row gy-4">
-      <div class="col-md-4">
-        <a routerLink="/" class="kart-logo">
-          <span class="logo-mark">SK</span>ShoeKart
-        </a>
-        <p class="footer-tag">Fresh pairs, honest prices. Shoes picked for people who walk fast and stand out.</p>
-      </div>
+<footer #footer class="kart-footer" [class.in-view]="inView()">
+  <span class="footer-topline" aria-hidden="true"></span>
+  <div class="footer-glow" aria-hidden="true"></div>
+  <div class="footer-watermark" aria-hidden="true">SHOEKART</div>
 
-      <div class="col-md-4">
-        <h6 class="footer-heading">Quick Links</h6>
-        <ul class="footer-links">
-          <li><a routerLink="/">Home</a></li>
-          <li><a routerLink="/about">About</a></li>
-          <li><a href="#">Shop</a></li>
-          <li><a routerLink="/contact">Contact Us</a></li>
+  <div class="container footer-inner">
+    <div class="row gy-5">
+
+      <!-- Brand -->
+      <div class="col-lg-4 col-md-12">
+        <a routerLink="/" class="kart-logo" aria-label="ShoeKart home">
+          <span class="logo-mark">SK</span>
+          <span class="logo-word" aria-hidden="true">
+            @for (c of brandLetters; track $index) {
+              <span class="letter" [style.--i]="$index">{{ c }}</span>
+            }
+          </span>
+        </a>
+
+        <p class="footer-tag reveal" style="--d: 0.35s">
+          Fresh pairs, honest prices. Shoes picked for people who walk fast and stand out.
+        </p>
+
+        <p class="footer-rotate reveal" style="--d: 0.45s">
+          Made to
+          <span class="rotator" aria-hidden="true">
+            <span class="rotator-track">
+              <span>walk fast</span>
+              <span>stand out</span>
+              <span>go further</span>
+              <span>look sharp</span>
+              <span>walk fast</span>
+            </span>
+          </span>
+        </p>
+
+        <p class="eyebrow footer-eyebrow reveal" style="--d: 0.55s">Follow Us</p>
+        <ul class="social-list">
+          @for (s of socials; track s.label) {
+            <li class="social-item" [style.--i]="$index">
+              <a class="social-link" [href]="s.url" target="_blank" rel="noopener noreferrer"
+                 [attr.aria-label]="s.label">
+                <i [class]="'bi ' + s.icon"></i>
+              </a>
+            </li>
+          }
         </ul>
       </div>
 
-      <div class="col-md-4">
-        <h6 class="footer-heading">Contact Info</h6>
+      <!-- Quick links -->
+      <div class="col-lg-4 col-md-6">
+        <h6 class="footer-heading reveal" style="--d: 0.3s">Quick Links</h6>
         <ul class="footer-links">
-          <li><i class="bi bi-geo-alt-fill"></i> Bhubaneswar, Odisha, India</li>
-          <li><i class="bi bi-telephone-fill"></i> +91 98765 43210</li>
-          <li><i class="bi bi-envelope-fill"></i> support&#64;shoekart.com</li>
+          <li class="reveal" style="--d: 0.4s"><a routerLink="/">Home</a></li>
+          <li class="reveal" style="--d: 0.5s"><a routerLink="/about">About</a></li>
+          <li class="reveal" style="--d: 0.6s"><a href="#">Shop</a></li>
+          <li class="reveal" style="--d: 0.7s"><a routerLink="/contact">Contact Us</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact -->
+      <div class="col-lg-4 col-md-6">
+        <h6 class="footer-heading reveal" style="--d: 0.35s">Contact Info</h6>
+        <ul class="footer-links footer-contact">
+          <li class="reveal" style="--d: 0.45s"><i class="bi bi-geo-alt-fill"></i> Bhubaneswar, Odisha, India</li>
+          <li class="reveal" style="--d: 0.55s"><i class="bi bi-telephone-fill"></i> +91 98765 43210</li>
+          <li class="reveal" style="--d: 0.65s"><i class="bi bi-envelope-fill"></i> support&#64;shoekart.com</li>
         </ul>
       </div>
     </div>
 
     <hr class="footer-rule">
-    <p class="footer-bottom">&copy; 2026 ShoeKart. All rights reserved.</p>
+
+    <div class="footer-bottom">
+      <p>&copy; {{ year }} ShoeKart. All rights reserved.</p>
+      <p class="footer-made">
+        Crafted with <i class="bi bi-heart-fill"></i> in Bhubaneswar
+      </p>
+    </div>
   </div>
 </footer>

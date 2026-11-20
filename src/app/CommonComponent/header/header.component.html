@@ -1,35 +1,209 @@
-<nav class="navbar navbar-expand-lg sticky-top kart-nav">
-  <div class="container">
-    <a class="navbar-brand kart-logo" routerLink="/">
-      <span class="logo-mark">SK</span>ShoeKart
+<nav class="navbar navbar-expand-lg sticky-top kart-nav"
+  [class.scrolled]="scrolled()" [class.nav-hidden]="hidden()">
+
+  <div class="container nav-inner">
+
+    <!-- Logo -->
+    <a class="navbar-brand kart-logo order-1" routerLink="/" aria-label="ShoeKart home" (click)="closeAll()">
+      <span class="logo-mark">SK</span>
+      <span class="logo-text" aria-hidden="true">
+        @for (c of letters; track $index) {
+          <span class="lt" [style.--i]="$index">{{ c }}</span>
+        }
+      </span>
     </a>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
-      aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+    <!-- Right side: search, wishlist, cart, settings, profile -->
+    <div class="nav-actions order-2 order-lg-3 ms-auto ms-lg-3">
+
+      <button type="button" class="icon-btn" aria-label="Search (press /)"
+        [attr.aria-expanded]="searchOpen()" (click)="toggleSearch()">
+        <i class="bi" [class.bi-search]="!searchOpen()" [class.bi-x-lg]="searchOpen()"></i>
+      </button>
+
+      <a class="icon-btn" routerLink="/wishlist" aria-label="Wishlist" (click)="closeAll()">
+        <i class="bi" [class.bi-heart]="wishlist.count() === 0" [class.bi-heart-fill]="wishlist.count() > 0"></i>
+        @if (wishlist.count() > 0) {
+          <span class="badge-count" [class.bump]="bumpWish()">{{ wishlist.count() }}</span>
+        }
+      </a>
+
+      <a class="icon-btn" routerLink="/cart" aria-label="Cart" (click)="closeAll()">
+        <i class="bi bi-bag"></i>
+        @if (cart.count() > 0) {
+          <span class="badge-count" [class.bump]="bumpCart()">{{ cart.count() }}</span>
+        }
+      </a>
+
+      <!-- Settings dropdown -->
+      <div class="dd-wrap">
+        <button type="button" class="icon-btn" aria-label="Settings" aria-haspopup="menu"
+          [attr.aria-expanded]="settingsOpen()" (click)="toggleSettings()">
+          <i class="bi bi-gear" [class.spin-once]="settingsOpen()"></i>
+        </button>
+
+        @if (settingsOpen()) {
+          <div class="dd-menu" role="menu">
+            <p class="dd-title">Settings</p>
+            <a class="dd-item" role="menuitem" routerLink="/profile" [queryParams]="{ tab: 'address' }" (click)="closeAll()">
+              <span class="dd-ic"><i class="bi bi-geo-alt"></i></span> Address
+            </a>
+            <a class="dd-item" role="menuitem" routerLink="/help-center" (click)="closeAll()">
+              <span class="dd-ic"><i class="bi bi-question-circle"></i></span> Help Center
+            </a>
+
+            <div class="dd-divider"></div>
+
+            <p class="dd-title">Manage store</p>
+            <a class="dd-item" role="menuitem" routerLink="/add-product" (click)="closeAll()">
+              <span class="dd-ic"><i class="bi bi-box-seam"></i></span> Add Product
+            </a>
+            <a class="dd-item" role="menuitem" routerLink="/add-brand" (click)="closeAll()">
+              <span class="dd-ic"><i class="bi bi-tags"></i></span> Add Brand
+            </a>
+          </div>
+        }
+      </div>
+
+      <!-- Profile dropdown -->
+      <div class="dd-wrap">
+        <button type="button" class="profile-btn" aria-label="Open profile menu" aria-haspopup="menu"
+          [attr.aria-expanded]="profileOpen()" (click)="toggleProfile()">
+          @if (user.profile().image) {
+            <img class="avatar" [src]="user.profile().image" alt="" />
+          } @else {
+            <span class="avatar avatar-fallback">{{ user.initial() }}</span>
+          }
+          <span class="profile-name d-none d-md-inline">{{ user.profile().name }}</span>
+          <i class="bi bi-chevron-down d-none d-md-inline profile-caret"></i>
+        </button>
+
+        @if (profileOpen()) {
+          <div class="dd-menu" role="menu">
+            <div class="dd-profile">
+              @if (user.profile().image) {
+                <img class="avatar avatar-lg" [src]="user.profile().image" alt="" />
+              } @else {
+                <span class="avatar avatar-lg avatar-fallback">{{ user.initial() }}</span>
+              }
+              <div class="dd-profile-text">
+                <span class="dd-greeting">{{ greeting() }}</span>
+                <strong>{{ user.profile().name }}</strong>
+                <small>{{ user.profile().email || 'ShoeKart member' }}</small>
+              </div>
+            </div>
+
+            <div class="dd-divider"></div>
+
+            <a class="dd-item" role="menuitem" routerLink="/profile" (click)="closeAll()">
+              <span class="dd-ic"><i class="bi bi-person"></i></span> My Profile
+            </a>
+            <a class="dd-item" role="menuitem" routerLink="/profile" [queryParams]="{ edit: 1 }" (click)="closeAll()">
+              <span class="dd-ic"><i class="bi bi-pencil-square"></i></span> Edit Profile
+            </a>
+            <a class="dd-item" role="menuitem" routerLink="/orders" (click)="closeAll()">
+              <span class="dd-ic"><i class="bi bi-box2"></i></span> My Orders
+            </a>
+            <a class="dd-item" role="menuitem" routerLink="/wishlist" (click)="closeAll()">
+              <span class="dd-ic"><i class="bi bi-heart"></i></span> Wishlist
+              @if (wishlist.count() > 0) {
+                <span class="dd-pill">{{ wishlist.count() }}</span>
+              }
+            </a>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Mobile menu button -->
+    <button class="navbar-toggler order-3 ms-2" type="button" aria-label="Toggle navigation"
+      [attr.aria-expanded]="menuOpen()" (click)="toggleMenu()">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id="mainNav">
-      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 text-center align-items-lg-center">
+    <!-- Main links (centered on desktop) -->
+    <div class="collapse navbar-collapse order-4 order-lg-2" id="mainNav" [class.show]="menuOpen()">
+      <ul class="navbar-nav mx-lg-auto mb-2 mb-lg-0 align-items-lg-center">
         <li class="nav-item">
-          <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"><i class="bi bi-house"></i> Home</a>
+          <a class="nav-link" routerLink="/" routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }" (click)="closeAll()">
+            <i class="bi bi-house"></i> <span>Home</span>
+          </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#about" routerLinkActive="active"><i class="bi bi-info-circle"></i> About</a>
+          <a class="nav-link" routerLink="/products" routerLinkActive="active" (click)="closeAll()">
+            <i class="bi bi-bag-check"></i> <span>Shop</span>
+          </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link"  routerLinkActive="active"><i class="bi bi-bag"></i> Shop</a>
-        </li>
-        <li  class="nav-item">
-          <a class="nav-link" routerLink="/add-product" routerLinkActive="active">Add Product <i class="bi bi-box-seam"></i></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/orders" routerLinkActive="active"><i class="bi bi-cart"></i> My Orders</a>
+          <a class="nav-link" routerLink="/brands" routerLinkActive="active" (click)="closeAll()">
+            <i class="bi bi-tags"></i> <span>Brands</span>
+          </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#contact" routerLinkActive="active"><i class="bi bi-headset"></i> Contact Us</a>
+          <a class="nav-link" routerLink="/" fragment="about" (click)="closeAll()">
+            <i class="bi bi-info-circle"></i> <span>About</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/" fragment="contact" (click)="closeAll()">
+            <i class="bi bi-headset"></i> <span>Contact Us</span>
+          </a>
         </li>
       </ul>
     </div>
   </div>
+
+  <!-- Search bar: hidden until the search icon is clicked -->
+  <div class="search-panel" [class.open]="searchOpen()">
+    <div class="container">
+      <form class="search-form" (ngSubmit)="submitSearch()">
+        <i class="bi bi-search"></i>
+        <input #searchInput type="search" name="q" [(ngModel)]="query"
+          placeholder="Search shoes, brands or colors" autocomplete="off" aria-label="Search products" />
+        <button type="submit" class="search-go">Search</button>
+      </form>
+
+      <div class="search-extras">
+        @if (recent().length > 0) {
+          <div class="se-row">
+            <span class="eyebrow se-label">Recent</span>
+            <div class="se-chips">
+              @for (r of recent(); track r) {
+                <button type="button" class="chip" [style.--i]="$index" (click)="searchFor(r)">
+                  <i class="bi bi-clock-history"></i> {{ r }}
+                </button>
+              }
+              <button type="button" class="chip-clear" (click)="clearRecent()">Clear</button>
+            </div>
+          </div>
+        }
+
+        <div class="se-row">
+          <span class="eyebrow se-label">Popular</span>
+          <div class="se-chips">
+            @for (p of popular; track p) {
+              <button type="button" class="chip" [style.--i]="$index" (click)="searchFor(p)">{{ p }}</button>
+            }
+          </div>
+        </div>
+      </div>
+
+      <p class="search-hint">Enter to search &nbsp;·&nbsp; Esc to close &nbsp;·&nbsp; Press / anywhere to open</p>
+    </div>
+  </div>
+
+  <!-- Scroll progress line -->
+  <span class="nav-progress" aria-hidden="true" [style.width.%]="progress()"></span>
 </nav>
+
+<!-- Notification strip: sits BELOW the navbar, outside it, and scrolls away with the page -->
+@if (announceOpen()) {
+  <div class="announce" role="region" aria-label="Store announcements">
+    <div class="announce-inner">
+      @for (m of currentAnnouncement(); track m.text) {
+        <span class="ann-msg"><i [class]="'bi ' + m.icon"></i> {{ m.text }}</span>
+      }
+    </div>
+  </div>
+}

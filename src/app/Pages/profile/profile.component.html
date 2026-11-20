@@ -1,0 +1,231 @@
+<!-- Avatar with camera button (used in the hero and in Edit profile) -->
+<ng-template #avatarBlock>
+  <div class="pf-avatar-wrap">
+    @if (user.profile().image) {
+      <img class="pf-avatar" [src]="user.profile().image" alt="Your profile photo" />
+    } @else {
+      <span class="pf-avatar pf-avatar-fallback" aria-hidden="true">{{ user.initial() }}</span>
+    }
+    <button type="button" class="pf-camera" aria-label="Change profile photo" (click)="photoInput.click()">
+      <i class="bi bi-camera-fill"></i>
+    </button>
+    <input #photoInput type="file" accept="image/*" hidden (change)="onPhotoPicked($event)" />
+  </div>
+</ng-template>
+
+<section class="pf-page">
+  <div class="pf-wrap">
+
+    <div class="pf-bar">
+      <button type="button" class="pf-back" (click)="goBack()">
+        <i class="bi bi-arrow-left"></i><span>Back</span>
+      </button>
+      <h1 class="pf-title">{{ title() }}</h1>
+    </div>
+
+    @switch (view()) {
+
+      <!-- ================= ACCOUNT OVERVIEW ================= -->
+      @case ('home') {
+        <section class="pf-hero">
+          <div class="pf-hero-id">
+            <ng-container [ngTemplateOutlet]="avatarBlock" />
+
+            <div class="pf-hero-text">
+              <h2 class="pf-name">{{ user.profile().name }}</h2>
+              <p class="pf-sub">{{ user.profile().email || 'ShoeKart member' }}</p>
+              @if (photoError()) {
+                <p class="pf-error pf-error-dark">{{ photoError() }}</p>
+              }
+              <div class="pf-hero-actions">
+                <a class="pf-btn-volt" routerLink="/profile" [queryParams]="{ edit: 1 }">
+                  <i class="bi bi-pencil"></i> Edit profile
+                </a>
+                <a class="pf-btn-ghost" routerLink="/orders">View orders</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="pf-stats">
+            <a class="pf-stat" routerLink="/wishlist">
+              <strong>{{ wishlist.count() }}</strong><span>Wishlist</span>
+            </a>
+            <a class="pf-stat" routerLink="/cart">
+              <strong>{{ cart.count() }}</strong><span>In cart</span>
+            </a>
+            <a class="pf-stat" routerLink="/profile" [queryParams]="{ tab: 'address' }">
+              <strong>{{ user.addresses().length }}</strong><span>Addresses</span>
+            </a>
+          </div>
+        </section>
+
+        <section class="pf-block">
+          <div class="pf-block-head">
+            <h2 class="pf-block-title">My orders</h2>
+            <a class="pf-link" routerLink="/orders">View all</a>
+          </div>
+
+          <div class="pf-orders">
+            @for (t of tiles; track t.label) {
+              <a class="pf-tile" [routerLink]="t.link" [queryParams]="t.params">
+                <span [class]="'pf-ic pf-ic-' + t.tone"><i [class]="'bi ' + t.icon"></i></span>
+                <span class="pf-tile-label">{{ t.label }}</span>
+              </a>
+            }
+          </div>
+        </section>
+
+        <section class="pf-block">
+          <h2 class="pf-block-title">Account</h2>
+
+          <nav class="pf-list" aria-label="Account settings">
+            <a class="pf-row" routerLink="/profile" [queryParams]="{ edit: 1 }">
+              <span class="pf-row-ic"><i class="bi bi-person"></i></span>
+              <span class="pf-row-text">
+                <strong>Edit profile</strong>
+                <span>Name, email, phone and photo</span>
+              </span>
+              <i class="bi bi-chevron-right pf-chev"></i>
+            </a>
+            <a class="pf-row" routerLink="/profile" [queryParams]="{ tab: 'address' }">
+              <span class="pf-row-ic"><i class="bi bi-geo-alt"></i></span>
+              <span class="pf-row-text">
+                <strong>Shipping address</strong>
+                <span>
+                  @if (user.addresses().length === 0) { Add where you want orders delivered }
+                  @else { {{ user.addresses().length }} saved }
+                </span>
+              </span>
+              <i class="bi bi-chevron-right pf-chev"></i>
+            </a>
+            <a class="pf-row" routerLink="/help-center">
+              <span class="pf-row-ic"><i class="bi bi-question-circle"></i></span>
+              <span class="pf-row-text">
+                <strong>Help center</strong>
+                <span>Get help with an order or your account</span>
+              </span>
+              <i class="bi bi-chevron-right pf-chev"></i>
+            </a>
+          </nav>
+        </section>
+
+        <div class="pf-foot">
+          <button type="button" class="pf-logout" (click)="logout()">
+            <i class="bi bi-box-arrow-right"></i> Log out
+          </button>
+        </div>
+      }
+
+      <!-- ================= EDIT PROFILE ================= -->
+      @case ('edit') {
+        <div class="pf-card pf-edit">
+          <div class="pf-edit-photo">
+            <ng-container [ngTemplateOutlet]="avatarBlock" />
+            <div>
+              <strong>Profile photo</strong>
+              <p>JPG, PNG or WebP, up to 1 MB.</p>
+              @if (user.profile().image) {
+                <button type="button" class="pf-text-btn" (click)="removePhoto()">Remove photo</button>
+              }
+              @if (photoError()) {
+                <p class="pf-error">{{ photoError() }}</p>
+              }
+            </div>
+          </div>
+
+          <form class="pf-form" (ngSubmit)="saveProfile()">
+            <div class="pf-field pf-span">
+              <label for="p-name">Full name</label>
+              <input id="p-name" name="name" type="text" [(ngModel)]="draft.name" maxlength="60" autocomplete="name" />
+            </div>
+
+            <div class="pf-field">
+              <label for="p-email">Email</label>
+              <input id="p-email" name="email" type="email" [(ngModel)]="draft.email" placeholder="you@example.com" autocomplete="email" />
+            </div>
+
+            <div class="pf-field">
+              <label for="p-phone">Phone</label>
+              <input id="p-phone" name="phone" type="tel" [(ngModel)]="draft.phone" maxlength="10" placeholder="10-digit number" autocomplete="tel" />
+            </div>
+
+            @if (formError) {
+              <p class="pf-error pf-span">{{ formError }}</p>
+            }
+
+            <div class="pf-actions pf-span">
+              <button type="submit" class="pf-btn-ink">Save changes</button>
+              <a class="pf-btn-line" routerLink="/profile">Cancel</a>
+            </div>
+          </form>
+        </div>
+      }
+
+      <!-- ================= SHIPPING ADDRESS ================= -->
+      @case ('address') {
+        <div class="pf-addr-grid">
+          <div>
+            <h2 class="pf-block-title">Saved addresses</h2>
+
+            @if (user.addresses().length === 0) {
+              <p class="pf-empty">You haven't saved an address yet. Add one to use it at checkout.</p>
+            } @else {
+              <ul class="pf-addresses">
+                @for (a of user.addresses(); track a.id) {
+                  <li>
+                    <span class="pf-addr-ic"><i class="bi bi-geo-alt-fill"></i></span>
+                    <div class="pf-addr-text">
+                      <strong>{{ a.label }}</strong>
+                      <p>{{ a.line }}, {{ a.city }} {{ a.pincode }}</p>
+                    </div>
+                    <button type="button" class="pf-del" (click)="user.removeAddress(a.id)"
+                      [attr.aria-label]="'Delete ' + a.label + ' address'">
+                      <i class="bi bi-trash3"></i>
+                    </button>
+                  </li>
+                }
+              </ul>
+            }
+          </div>
+
+          <form class="pf-card pf-form" (ngSubmit)="addAddress()">
+            <h2 class="pf-block-title pf-span">Add a new address</h2>
+
+            <div class="pf-field pf-span">
+              <label for="a-label">Label</label>
+              <input id="a-label" name="label" type="text" [(ngModel)]="newAddress.label" placeholder="Home, Office..." />
+            </div>
+
+            <div class="pf-field pf-span">
+              <label for="a-line">Street address</label>
+              <input id="a-line" name="line" type="text" [(ngModel)]="newAddress.line" autocomplete="street-address" />
+            </div>
+
+            <div class="pf-field">
+              <label for="a-city">City</label>
+              <input id="a-city" name="city" type="text" [(ngModel)]="newAddress.city" autocomplete="address-level2" />
+            </div>
+
+            <div class="pf-field">
+              <label for="a-pin">Pincode</label>
+              <input id="a-pin" name="pincode" type="text" inputmode="numeric" maxlength="6"
+                [(ngModel)]="newAddress.pincode" autocomplete="postal-code" />
+            </div>
+
+            @if (addressError) {
+              <p class="pf-error pf-span">{{ addressError }}</p>
+            }
+
+            <div class="pf-actions pf-span">
+              <button type="submit" class="pf-btn-ink">Save address</button>
+            </div>
+          </form>
+        </div>
+      }
+    }
+  </div>
+
+  @if (notice()) {
+    <div class="pf-toast" role="status">{{ notice() }}</div>
+  }
+</section>

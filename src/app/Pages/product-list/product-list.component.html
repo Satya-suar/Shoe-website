@@ -1,46 +1,209 @@
 <section class="section list-section">
   <div class="container">
-   <ngx-spinner
-  bdColor="rgba(0,0,0,0.4)"
-  size="large"
-  color="#ffffff"
-  type="ball-scale-multiple"
-  [fullScreen]="true">
-  <p style="color:white; margin-top:15px;">
-    Loading Products...
-  </p>
-</ngx-spinner>
 
-  <div class="section-head">
-  <div>
-    <p class="eyebrow">Brand Collection</p>
-    <h2 class="section-title">
-      {{ brandName ? brandName + ' Shoes' : 'Products' }}
-    </h2>
-  </div>
-  <a routerLink="/brands" class="btn-view-all">
-    <i class="bi bi-arrow-left"></i> All Brands
-  </a>
-</div>
+    <ngx-spinner
+      bdColor="rgba(0,0,0,0.4)"
+      size="large"
+      color="#ffffff"
+      type="ball-scale-multiple"
+      [fullScreen]="true">
+      <p style="color:white; margin-top:15px;">Loading products...</p>
+    </ngx-spinner>
 
-<div *ngIf="productList.length === 0" class="empty-state">
-  No products found for this brand yet.
-</div>
+    <!-- Heading -->
+    <header class="pl-head">
+      <div>
+        <h1 class="pl-title">{{ heading() }}</h1>
+        @if (!isLoading() && !loadFailed()) {
+          <p class="pl-count" aria-live="polite">{{ countText() }}</p>
+        }
+      </div>
 
-<div *ngIf="productList.length > 0" class="product-grid">
-  <app-card
-    *ngFor="let product of productList"
-    [product]="product">
-  </app-card>
-</div>
+      <div class="pl-links">
+        @if (brandId() > 0) {
+          <a routerLink="/shop" class="pl-link"><i class="bi bi-grid"></i> All shoes</a>
+        }
+        <a routerLink="/brands" class="pl-link">
+          <i class="bi bi-tags"></i> {{ brandId() > 0 ? 'All brands' : 'Browse by brand' }}
+        </a>
+      </div>
+    </header>
 
+    @if (loadFailed()) {
+      <div class="empty-state">
+        <i class="bi bi-wifi-off"></i>
+        <h2>We couldn't load the products</h2>
+        <p>Check your connection and try again.</p>
+        <button type="button" class="pl-btn" (click)="loadProducts()">Try again</button>
+      </div>
+    } @else if (!isLoading() && products().length === 0) {
+      <div class="empty-state">
+        <i class="bi bi-box2"></i>
+        <h2>{{ brandId() > 0 ? 'No products for this brand yet' : 'No products yet' }}</h2>
+        <p>Products you add will show up here.</p>
+        <a routerLink="/add-product" class="pl-btn">Add a product</a>
+      </div>
+    } @else if (products().length > 0) {
 
-    <div *ngIf="!isLoading && productList.length === 0" class="empty-state">
-      No products found for this brand yet.
-    </div>
+      <!-- Toolbar: search, sort, filters button (phones) -->
+      <div class="pl-toolbar">
+        <div class="pl-search">
+          <i class="bi bi-search"></i>
+          <input type="search" placeholder="Search by name, brand or color" aria-label="Search products"
+            [value]="search()" (input)="search.set($any($event.target).value)" />
+        </div>
 
-    <div *ngIf="!isLoading && productList.length > 0" class="product-grid">
-      <app-card *ngFor="let product of productList" [product]="product"></app-card>
-    </div>
+        <label class="pl-select">
+          <span class="visually-hidden">Sort by</span>
+          <select (change)="sortBy.set($any($event.target).value)">
+            <option value="name" [selected]="sortBy() === 'name'">Name: A to Z</option>
+            <option value="price-asc" [selected]="sortBy() === 'price-asc'">Price: low to high</option>
+            <option value="price-desc" [selected]="sortBy() === 'price-desc'">Price: high to low</option>
+          </select>
+        </label>
+
+        <button type="button" class="pl-filter-btn" (click)="openFilters()">
+          <i class="bi bi-sliders"></i> Filters
+          @if (activeFilters().length > 0) {
+            <span class="pl-filter-count">{{ activeFilters().length }}</span>
+          }
+        </button>
+      </div>
+
+      <div class="pl-layout">
+
+        <!-- ================= FILTER PANEL ================= -->
+        <aside class="pl-filters" [class.open]="filtersOpen()" aria-label="Filters">
+          <div class="fl-head">
+            <h2>Filters</h2>
+            @if (activeFilters().length > 0) {
+              <button type="button" class="fl-clear" (click)="clearFilters()">Clear all</button>
+            }
+            <button type="button" class="fl-close" aria-label="Close filters" (click)="closeFilters()">
+              <i class="bi bi-x-lg"></i>
+            </button>
+          </div>
+
+          <div class="fl-body">
+
+            <!-- Brand (all-products view only) -->
+            @if (brandId() === 0 && brands().length > 1) {
+              <section class="fl-group">
+                <h3 class="fl-title">Brand</h3>
+                <div class="fl-checks">
+                  @for (b of brands(); track b.name) {
+                    <label class="fl-check">
+                      <input type="checkbox" [checked]="selectedBrands().includes(b.name)"
+                        (change)="toggleBrand(b.name)" />
+                      <span class="box" aria-hidden="true"></span>
+                      <span class="name">{{ b.name }}</span>
+                      <small>{{ b.count }}</small>
+                    </label>
+                  }
+                </div>
+              </section>
+            }
+
+            <!-- Price -->
+            <section class="fl-group">
+              <h3 class="fl-title">Price</h3>
+              <div class="fl-price">
+                <label class="fl-money">
+                  <span class="visually-hidden">Minimum price</span>
+                  <i>₹</i>
+                  <input type="number" inputmode="numeric" min="0"
+                    [placeholder]="priceBounds().min" [value]="minPrice() ?? ''" (input)="setMin($event)" />
+                </label>
+                <span class="fl-to">to</span>
+                <label class="fl-money">
+                  <span class="visually-hidden">Maximum price</span>
+                  <i>₹</i>
+                  <input type="number" inputmode="numeric" min="0"
+                    [placeholder]="priceBounds().max" [value]="maxPrice() ?? ''" (input)="setMax($event)" />
+                </label>
+              </div>
+            </section>
+
+            <!-- Size -->
+            @if (sizes().length > 0) {
+              <section class="fl-group">
+                <h3 class="fl-title">Size</h3>
+                <div class="fl-chips">
+                  @for (s of sizes(); track s.value) {
+                    <button type="button" class="fl-chip" [class.active]="selectedSizes().includes(s.value)"
+                      [attr.aria-pressed]="selectedSizes().includes(s.value)" (click)="toggleSize(s.value)">
+                      {{ s.value }}
+                    </button>
+                  }
+                </div>
+              </section>
+            }
+
+            <!-- Color -->
+            @if (colors().length > 0) {
+              <section class="fl-group">
+                <h3 class="fl-title">Color</h3>
+                <div class="fl-chips">
+                  @for (c of colors(); track c.key) {
+                    <button type="button" class="fl-chip" [class.active]="selectedColors().includes(c.key)"
+                      [attr.aria-pressed]="selectedColors().includes(c.key)" (click)="toggleColor(c.key)">
+                      <span class="dot" [style.background]="c.name"></span>{{ c.name }}
+                    </button>
+                  }
+                </div>
+              </section>
+            }
+
+            <!-- Availability -->
+            <section class="fl-group">
+              <h3 class="fl-title">Availability</h3>
+              <label class="pl-switch">
+                <input type="checkbox" [checked]="inStockOnly()"
+                  (change)="inStockOnly.set($any($event.target).checked)" />
+                <span class="track" aria-hidden="true"></span>
+                <span>In stock only</span>
+              </label>
+            </section>
+          </div>
+
+          <div class="fl-foot">
+            <button type="button" class="pl-btn fl-apply" (click)="closeFilters()">
+              Show {{ filtered().length }} {{ filtered().length === 1 ? 'shoe' : 'shoes' }}
+            </button>
+          </div>
+        </aside>
+
+        <!-- ================= RESULTS ================= -->
+        <div class="pl-results">
+
+          @if (activeFilters().length > 0) {
+            <div class="pl-active" aria-label="Active filters">
+              @for (f of activeFilters(); track f.kind + f.value) {
+                <button type="button" class="pl-tag" (click)="removeFilter(f)"
+                  [attr.aria-label]="'Remove filter ' + f.label">
+                  {{ f.label }} <i class="bi bi-x-lg"></i>
+                </button>
+              }
+              <button type="button" class="pl-clear-all" (click)="clearFilters()">Clear all</button>
+            </div>
+          }
+
+          @if (filtered().length > 0) {
+            <div class="product-grid">
+              @for (product of filtered(); track product.productId) {
+                <app-card [product]="product"></app-card>
+              }
+            </div>
+          } @else {
+            <div class="empty-state">
+              <i class="bi bi-search"></i>
+              <h2>No shoes match your filters</h2>
+              <p>Try a different search, or clear the filters to see everything.</p>
+              <button type="button" class="pl-btn" (click)="clearFilters()">Clear filters</button>
+            </div>
+          }
+        </div>
+      </div>
+    }
   </div>
 </section>

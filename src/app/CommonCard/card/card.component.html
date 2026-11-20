@@ -1,14 +1,27 @@
-<div class="shoe-card text-decoration-none">
+<article class="shoe-card">
   <div class="shoe-card-img">
-    <img [src]="imageUrl + product.productImage" [alt]="product.productName">
+    <a class="img-link" [routerLink]="['/products', product.productId]"
+      [attr.aria-label]="'View ' + product.productName">
+      <img [src]="imageUrl + product.productImage" [alt]="product.productName" loading="lazy">
+    </a>
+
     <span class="stock-chip" [class.out]="!product.isStock">
-      {{ product.isStock ? 'Available' : 'Out of Stock' }}
+      {{ product.isStock ? 'Available' : 'Out of stock' }}
     </span>
+
+    <button type="button" class="wish-btn" [class.active]="wishlist.has(product.productId)"
+      [attr.aria-pressed]="wishlist.has(product.productId)"
+      [attr.aria-label]="wishlist.has(product.productId) ? 'Remove from wishlist' : 'Add to wishlist'"
+      (click)="toggleWishlist()">
+      <i class="bi" [class.bi-heart]="!wishlist.has(product.productId)" [class.bi-heart-fill]="wishlist.has(product.productId)"></i>
+    </button>
   </div>
 
   <div class="shoe-card-body">
     <p class="shoe-brand">{{ product.brandName }}</p>
-    <h3 class="shoe-name">{{ product.productName }}</h3>
+    <h3 class="shoe-name">
+      <a [routerLink]="['/products', product.productId]">{{ product.productName }}</a>
+    </h3>
 
     <div class="shoe-meta">
       <span>Size {{ product.size }}</span>
@@ -16,7 +29,18 @@
       <span>{{ product.color }}</span>
     </div>
 
-    <p class="shoe-price">{{ product.price |currency:'INR'}}</p>
-    <button class="btn-viewdetails btn btn-outline-ink mt-2" [routerLink]="['/products', product.productId]"><i class="bi bi-eye"></i> View Details</button>
+    <p class="shoe-price">{{ product.price | currency:'INR' }}</p>
+
+    <div class="shoe-actions">
+      <button type="button" class="btn-cart" [class.added]="added()" [disabled]="!product.isStock" (click)="addToCart()">
+        <i class="bi" [class.bi-bag-plus]="!added()" [class.bi-check2]="added()"></i>
+        {{ !product.isStock ? 'Out of stock' : added() ? 'Added' : 'Add to cart' }}
+      </button>
+
+      <a class="btn-details" [routerLink]="['/products', product.productId]"
+        [attr.aria-label]="'View details of ' + product.productName">
+        <i class="bi bi-eye"></i>
+      </a>
+    </div>
   </div>
-</div>
+</article>
