@@ -470,3 +470,231 @@ button:focus-visible {
     width: 100%;
   }
 }
+
+
+/* ===== SH O E K A R T RESPONSIVE OVERRIDES ===== */
+/* =========================================================
+   SH O E K A R T — GLOBAL RESPONSIVE FOUNDATION
+   Appended overrides: original visual theme is preserved.
+========================================================= */
+
+:root {
+  --page-gutter: clamp(14px, 3.2vw, 32px);
+  --section-space: clamp(40px, 6vw, 72px);
+  --content-width: 1200px;
+  --text-measure: 68ch;
+  --focus-ring: 0 0 0 3px rgba(220, 255, 79, 0.35);
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 90px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-width: 320px;
+  overflow-x: hidden;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--content-width);
+  padding-left: var(--page-gutter);
+  padding-right: var(--page-gutter);
+}
+
+.section {
+  padding-top: var(--section-space);
+  padding-bottom: var(--section-space);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: anywhere;
+}
+
+p {
+  overflow-wrap: break-word;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  font-weight: inherit;
+  touch-action: manipulation;
+}
+
+button:hover {
+  /* Component buttons own their individual hover motion. */
+  transform: none;
+}
+
+a,
+button,
+input,
+select,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+.form-control,
+input,
+select,
+textarea {
+  max-width: 100%;
+}
+
+.premium-form {
+  width: min(100%, 900px);
+  min-width: 0;
+}
+
+.grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.form-group,
+.form-row,
+.pf-field {
+  min-width: 0;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea,
+.form-control,
+.pf-field input {
+  width: 100%;
+  min-width: 0;
+}
+
+@media (min-width: 1460px) {
+  .container {
+    max-width: 1280px;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  :root {
+    --section-space: 60px;
+  }
+}
+
+@media (max-width: 991.98px) {
+  :root {
+    --section-space: 52px;
+  }
+
+  .container {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 767.98px) {
+  :root {
+    --section-space: 44px;
+    --page-gutter: 18px;
+  }
+
+  body {
+    font-size: 15px;
+  }
+
+  .section-head {
+    align-items: flex-start;
+    margin-bottom: 26px;
+  }
+
+  .section-title {
+    font-size: clamp(1.5rem, 6vw, 2rem);
+    line-height: 1.12;
+  }
+
+  .eyebrow {
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+  }
+
+  .premium-form {
+    padding: 24px 20px;
+    border-radius: 18px;
+  }
+
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .check-row,
+  .checkbox-row {
+    flex-wrap: wrap;
+    gap: 12px 18px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  :root {
+    --section-space: 38px;
+    --page-gutter: 14px;
+  }
+
+  .section-head {
+    gap: 12px;
+    margin-bottom: 22px;
+  }
+
+  .btn-volt,
+  .btn-outline-ink {
+    min-height: 44px;
+    padding: 11px 18px;
+    font-size: 0.9rem;
+  }
+
+  .btn-view-all {
+    font-size: 0.75rem;
+  }
+
+  .speed-divider {
+    height: 18px;
+  }
+
+  .premium-form {
+    padding: 20px 16px;
+    border-radius: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
