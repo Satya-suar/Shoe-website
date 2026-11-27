@@ -93,7 +93,7 @@ export class ProfileComponent {
       input.value = '';
       return;
     }
-    if (file.size > 1024 * 1024) {
+    if (file.size >5* 1024 * 1024) {
       this.photoError.set('Choose an image smaller than 1 MB.');
       input.value = '';
       return;
