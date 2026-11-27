@@ -9,7 +9,6 @@ import {
   signal,
 } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { MyServiceService } from '../../Common-Service/my-service.service';
 import { CardComponent } from '../../CommonCard/card/card.component';
 
@@ -23,7 +22,7 @@ interface ActiveFilter {
 
 @Component({
   selector: 'app-product-list',
-  imports: [RouterLink, CardComponent, NgxSpinnerModule],
+  imports: [RouterLink, CardComponent],
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.css',
 })
@@ -31,7 +30,6 @@ export class ProductListComponent implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private myService = inject(MyServiceService);
-  private spinner = inject(NgxSpinnerService);
 
   // ---------- Data ----------
   products = signal<any[]>([]);
@@ -212,7 +210,6 @@ loadProducts(): void {
   this.isLoading.set(true);
   this.loadFailed.set(false);
 
-  this.spinner.show();
 
   const request$ = id > 0
     ? this.myService.getProductsByBrand(id)
@@ -353,6 +350,5 @@ loadProducts(): void {
 
   private finish(): void {
     this.isLoading.set(false);
-    this.spinner.hide();
   }
 }

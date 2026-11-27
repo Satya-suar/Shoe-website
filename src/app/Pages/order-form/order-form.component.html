@@ -1,43 +1,75 @@
-<div class="order-form-wrap">
-  <p class="eyebrow">Almost There</p>
-  <h3 class="form-title">Buy It Now</h3>
+<div class="kart-card order-form-wrap">
+  <div class="of-head">
+    <div>
+      <p class="eyebrow mb-1">Almost there</p>
+      <h3 class="form-title">Buy it now</h3>
+    </div>
+    <div class="of-product">
+      <span class="of-name">{{ product?.productName }}</span>
+      <strong class="of-price">{{ product?.price | currency:'INR':'symbol':'1.0-2' }}</strong>
+    </div>
+  </div>
 
   <form [formGroup]="orderForm" (ngSubmit)="submitOrder()" novalidate>
+    <div class="row g-3">
 
-    <div class="form-row">
-      <label>Full Name</label>
-      <input type="text" class="form-control" formControlName="customerName" placeholder="e.g. Rahul Sharma">
-      <p class="err-text" *ngIf="f['customerName'].touched && f['customerName'].invalid">
-        Please enter your full name (at least 3 characters).
-      </p>
+      <div class="col-md-6">
+        <label class="form-label" for="of-name">Full name</label>
+        <input id="of-name" type="text" class="form-control" formControlName="customerName"
+          [class.is-invalid]="f['customerName'].touched && f['customerName'].invalid" placeholder="e.g. Rahul Sharma" autocomplete="name">
+        @if (f['customerName'].touched && f['customerName'].invalid) {
+          <p class="field-error">Please enter your full name (at least 3 characters).</p>
+        }
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label" for="of-mobile">Mobile number</label>
+        <input id="of-mobile" type="text" inputmode="numeric" class="form-control" formControlName="mobileNumber"
+          [class.is-invalid]="f['mobileNumber'].touched && f['mobileNumber'].invalid" placeholder="10 digit mobile number" maxlength="10" autocomplete="tel">
+        @if (f['mobileNumber'].touched && f['mobileNumber'].invalid) {
+          <p class="field-error">Please enter a valid 10 digit mobile number.</p>
+        }
+      </div>
+
+      <div class="col-12">
+        <label class="form-label" for="of-email">Email</label>
+        <input id="of-email" type="email" class="form-control" formControlName="email"
+          [class.is-invalid]="f['email'].touched && f['email'].invalid" placeholder="you&#64;example.com" autocomplete="email">
+        @if (f['email'].touched && f['email'].invalid) {
+          <p class="field-error">Please enter a valid email address.</p>
+        }
+      </div>
+
+      <div class="col-12">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+          <label class="form-label mb-0" for="of-address">Delivery address</label>
+          @if (user.addresses().length > 0) {
+            <select class="form-select form-select-sm saved-select" aria-label="Use a saved address" (change)="useSaved($any($event.target).value)">
+              <option value="">Use a saved address</option>
+              @for (a of user.addresses(); track a.id) {
+                <option [value]="a.id">{{ a.label }} - {{ a.city }}</option>
+              }
+            </select>
+          }
+        </div>
+        <textarea id="of-address" class="form-control mt-2" rows="3" formControlName="address"
+          [class.is-invalid]="f['address'].touched && f['address'].invalid" placeholder="House no, street, city, pincode" autocomplete="street-address"></textarea>
+        @if (f['address'].touched && f['address'].invalid) {
+          <p class="field-error">Please enter a complete address (at least 10 characters).</p>
+        }
+      </div>
+
+      <div class="col-12">
+        <button type="submit" class="btn-kart btn-glow btn-flip lg block" [disabled]="isSubmitting">
+          <span class="flip">
+            <span class="front">
+              @if (isSubmitting) { <span class="spinner-border spinner-border-sm" aria-hidden="true"></span> Placing order... }
+              @else { <i class="bi bi-bag-check-fill"></i> Confirm order }
+            </span>
+            <span class="back"><i class="bi bi-lightning-charge-fill"></i> {{ isSubmitting ? 'Hang tight' : 'Place it' }}</span>
+          </span>
+        </button>
+      </div>
     </div>
-
-    <div class="form-row">
-      <label>Mobile Number</label>
-      <input type="text" class="form-control" formControlName="mobileNumber" placeholder="10 digit mobile number" maxlength="10">
-      <p class="err-text" *ngIf="f['mobileNumber'].touched && f['mobileNumber'].invalid">
-        Please enter a valid 10 digit mobile number.
-      </p>
-    </div>
-
-    <div class="form-row">
-      <label>Email</label>
-      <input type="email" class="form-control" formControlName="email" placeholder="you&#64;example.com">
-      <p class="err-text" *ngIf="f['email'].touched && f['email'].invalid">
-        Please enter a valid email address.
-      </p>
-    </div>
-
-    <div class="form-row">
-      <label>Delivery Address</label>
-      <textarea class="form-control" rows="3" formControlName="address" placeholder="House no, street, city, pincode"></textarea>
-      <p class="err-text" *ngIf="f['address'].touched && f['address'].invalid">
-        Please enter a complete address (at least 10 characters).
-      </p>
-    </div>
-
-    <button type="submit" class="btn-volt w-100" [disabled]="isSubmitting">
-      {{ isSubmitting ? 'Placing Order...' : 'Confirm Order' }}
-    </button>
   </form>
 </div>

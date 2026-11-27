@@ -1,9 +1,9 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { RevealDirective } from '../../Shared/reveal.directive';
 
 @Component({
   selector: 'app-happy-customer',
-  imports: [CommonModule],
+  imports: [RevealDirective],
   templateUrl: './happy-customer.component.html',
   styleUrl: './happy-customer.component.css'
 })

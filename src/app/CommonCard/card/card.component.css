@@ -1,494 +1,78 @@
-/* ===== Product card v3: "Gallery print" ===== */
-/* The shoe sits in a framed picture, all details are on a solid dark panel
-   underneath, so text is always readable whatever the photo looks like. */
-:host {
-  display: block;
-  height: 100%;
-  container-type: inline-size;
-}
+:host { display: block; height: 100%; }
 
+/* ===== black + red card ===== */
 .shoe-card {
-  --card-red: var(--crimson, #b3121f);
-  --card-red-bright: var(--crimson-bright, #d71f2d);
-  --card-accent: #ff6470;                 /* readable red for small text on dark */
-  --card-ivory: var(--ivory, #f5efe6);
-  --card-muted: rgba(245, 239, 230, 0.72);
-  --card-line: rgba(245, 239, 230, 0.16);
-
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 10px;
-  border: 1px solid var(--card-line);
-  border-radius: 2px;
-  background: linear-gradient(180deg, #17141a 0%, #0f0e11 100%);
-  color: var(--card-ivory);
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
-  transition: transform 0.4s cubic-bezier(0.2, 0.7, 0.2, 1),
-              border-color 0.3s ease,
-              box-shadow 0.4s ease;
+  border: 1px solid #34343a;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #1a1a1d;
+  color: #f5f5f5;
+  transition: transform .3s, box-shadow .3s, border-color .3s;
 }
-
 .shoe-card:hover {
-  transform: translateY(-6px);
-  border-color: rgba(215, 31, 45, 0.7);
-  box-shadow: 0 28px 52px rgba(0, 0, 0, 0.6), 0 0 36px rgba(179, 18, 31, 0.22);
+  transform: translateY(-5px);
+  border-color: #e0242f;
+  box-shadow: 0 14px 30px rgba(224, 36, 47, .25);
 }
 
-/* ---------- Framed picture ---------- */
-.shoe-card-img {
-  position: relative;
-  aspect-ratio: 1 / 1;
-  overflow: hidden;
-  border: 1px solid rgba(245, 239, 230, 0.3);
-  background: #1c191f;
-}
+/* image (small, on a light panel so any photo looks clean) */
+.shoe-card-img { position: relative; overflow: hidden; background: #f1f1f3; border-bottom: 3px solid #e0242f; }
+.shoe-card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s; }
+.shoe-card:hover img { transform: scale(1.05); }
 
-.img-link {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-.shoe-card-img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1), filter 0.4s ease;
-}
-
-.shoe-card:hover .shoe-card-img img {
-  transform: scale(1.06);
-}
-
-.shoe-card-img:has(.stock-chip.out) img {
-  filter: grayscale(0.85) brightness(0.85);
-}
-
-/* ---------- Stock tag (solid, so it reads on any photo) ---------- */
 .stock-chip {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  z-index: 2;
-  padding: 6px 12px;
-  border-radius: 2px;
-  background: #0a0a0b;
-  color: var(--card-ivory);
-  font-family: var(--font-tag, Inter, sans-serif);
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  position: absolute; top: 8px; left: 8px;
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 3px 8px; border-radius: 3px;
+  background: #121214; color: #fff; font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
 }
+.stock-dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; }  /* green = available */
+.stock-chip.out .stock-dot { background: #ff2d3a; }                                /* red = not available */
 
-.stock-chip::before {
-  content: "";
-  display: inline-block;
-  width: 7px;
-  height: 7px;
-  margin-right: 8px;
-  border-radius: 50%;
-  background: #4cc98a;
-}
-
-.stock-chip.out {
-  background: var(--card-red);
-}
-
-.stock-chip.out::before {
-  background: var(--card-ivory);
-}
-
-/* ---------- Wishlist heart (solid) ---------- */
 .wish-btn {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  z-index: 2;
-  display: grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  padding: 0;
-  border: 1px solid rgba(245, 239, 230, 0.35);
-  border-radius: 50%;
-  background: #0a0a0b;
-  color: var(--card-ivory);
-  font-size: 1rem;
-  line-height: 1;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
-  cursor: pointer;
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.25s ease, border-color 0.25s ease;
+  position: absolute; top: 6px; right: 6px;
+  width: 32px; height: 32px; border: 0; border-radius: 4px;
+  background: #121214; color: #fff; cursor: pointer; font-size: .9rem;
 }
+.wish-btn:hover { background: #e0242f; }
+.wish-btn.active { background: #e0242f; }
 
-.wish-btn:hover {
-  transform: scale(1.12);
-  border-color: var(--card-red-bright);
+/* text */
+.card-body { padding: 12px; }
+.shoe-brand { margin: 0 0 3px; color: #ff4a55; font-size: .68rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+.shoe-name { margin: 0 0 10px; min-height: 2.5em; font-size: 1rem; font-weight: 700; line-height: 1.25; }
+.shoe-name a { color: #f5f5f5; text-decoration: none; }
+
+/* one common small square badge (size + colour), same look + an icon each */
+.tag {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 8px;
+  border: 1px solid #3a3a40; border-radius: 3px;
+  background: #1d1d21; color: #f5f5f5;
+  font-size: .68rem; font-weight: 600; line-height: 1.3;
 }
+.tag i { color: #ff4a55; }
 
-.wish-btn.active {
-  border-color: var(--card-red-bright);
-  background: var(--card-red);
-  animation: heartPop 0.35s ease-out;
+/* colour badge: icon only */
+.tag-icon { padding: 3px 7px; }
+.tag-icon i { font-size: .85rem; line-height: 1; }
+
+/* price + buttons */
+.shoe-price { margin: 0 0 10px; font-size: 1.35rem; font-weight: 800; }
+
+.btn-cart, .btn-eye {
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 40px; border-radius: 4px; font-weight: 700; font-size: .8rem;
+  text-decoration: none; cursor: pointer; transition: all .25s;
 }
+.btn-cart { gap: 8px; border: 1px solid #e0242f; background: #e0242f; color: #fff; }
+.btn-cart:hover:not(:disabled) { background: transparent; }
+.btn-cart.added { background: #fff; border-color: #fff; color: #121214; }
+.btn-cart:disabled { background: #222; border-color: #333; color: #777; cursor: not-allowed; }
 
-@keyframes heartPop {
-  0%   { transform: scale(0.8); }
-  60%  { transform: scale(1.3); }
-  100% { transform: scale(1); }
-}
+.btn-eye { width: 40px; border: 1px solid #55555c; background: transparent; color: #fff; }
+.btn-eye:hover { background: #fff; border-color: #fff; color: #121214; }
 
-/* ---------- Details panel ---------- */
-.shoe-card-body {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  flex: 1;
-  align-content: start;
-  padding: 18px 8px 8px;
-}
-
-.shoe-brand,
-.shoe-name,
-.shoe-meta {
-  grid-column: 1 / -1;
-}
-
-.shoe-brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 0 0 8px;
-  color: var(--card-accent);
-  font-family: var(--font-tag, Inter, sans-serif);
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-}
-
-.shoe-brand::before {
-  content: "";
-  width: 7px;
-  height: 7px;
-  background: var(--card-red-bright);
-  transform: rotate(45deg);
-}
-
-.shoe-name {
-  margin: 0 0 14px;
-  min-height: 2.5em;               /* keeps all cards aligned (2 lines) */
-  font-family: var(--font-display, Georgia, serif);
-  font-size: 1.2rem;
-  font-weight: 600;
-  line-height: 1.25;
-  letter-spacing: 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.shoe-name a {
-  color: var(--card-ivory);
-  text-decoration: none;
-}
-
-.shoe-name a:hover {
-  color: var(--card-accent);
-}
-
-/* size + colour as little tags */
-.shoe-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 18px;
-}
-
-.shoe-meta .dot {
-  display: none;
-}
-
-.shoe-meta span:not(.dot) {
-  padding: 4px 11px;
-  border: 1px solid var(--card-line);
-  border-radius: 2px;
-  background: rgba(245, 239, 230, 0.06);
-  color: var(--card-ivory);
-  font-size: 0.78rem;
-  font-weight: 500;
-  line-height: 1.4;
-}
-
-/* ---------- Footer row: price | buttons ---------- */
-.shoe-price,
-.shoe-actions {
-  padding-top: 16px;
-  border-top: 1px solid var(--card-line);
-}
-
-.shoe-price {
-  grid-column: 1;
-  align-self: center;
-  margin: 0;
-  padding-right: 12px;
-  font-family: var(--font-display, Georgia, serif);
-  font-size: 1.4rem;
-  font-weight: 600;
-  line-height: 1;
-  white-space: nowrap;
-  color: var(--card-ivory);
-}
-
-.shoe-actions {
-  grid-column: 2;
-  display: flex;
-  gap: 8px;
-}
-
-.btn-cart {
-  display: flex;
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  height: 44px;
-  padding: 0 16px;
-  border: 1px solid var(--card-red);
-  border-radius: 2px;
-  background: var(--card-red);
-  color: var(--card-ivory);
-  font-family: var(--font-tag, Inter, sans-serif);
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.btn-cart:hover:not(:disabled) {
-  border-color: var(--card-ivory);
-  background: transparent;
-}
-
-.btn-cart.added {
-  border-color: var(--card-ivory);
-  background: var(--card-ivory);
-  color: #0a0a0b;
-}
-
-.btn-cart:disabled {
-  border-color: var(--card-line);
-  background: rgba(245, 239, 230, 0.06);
-  color: rgba(245, 239, 230, 0.45);
-  cursor: not-allowed;
-}
-
-.btn-details {
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  width: 44px;
-  height: 44px;
-  border: 1px solid rgba(245, 239, 230, 0.4);
-  border-radius: 2px;
-  color: var(--card-ivory);
-  text-decoration: none;
-  transition: all 0.3s ease;
-}
-
-.btn-details:hover {
-  border-color: var(--card-ivory);
-  background: var(--card-ivory);
-  color: #0a0a0b;
-}
-
-/* ---------- Hover: brand, tags and stock badge ---------- */
-.shoe-brand {
-  justify-self: start;               /* hover area = just the text */
-  position: relative;
-  cursor: default;
-  transition: color 0.3s ease, letter-spacing 0.4s ease, gap 0.4s ease;
-}
-
-.shoe-brand::before {
-  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s ease;
-}
-
-/* underline that draws under the brand */
-.shoe-brand::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -4px;
-  width: 100%;
-  height: 1px;
-  background: var(--card-accent);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.4s ease;
-}
-
-.shoe-brand:hover {
-  color: var(--card-ivory);
-  letter-spacing: 0.3em;
-  gap: 14px;
-}
-
-.shoe-brand:hover::before {
-  transform: rotate(225deg) scale(1.25);   /* diamond spins */
-}
-
-.shoe-brand:hover::after {
-  transform: scaleX(1);
-}
-
-/* size / colour tags */
-.shoe-meta span:not(.dot) {
-  cursor: default;
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
-              background 0.25s ease,
-              border-color 0.25s ease,
-              color 0.25s ease,
-              box-shadow 0.3s ease;
-}
-
-.shoe-meta span:not(.dot):hover {
-  transform: translateY(-3px);
-  border-color: var(--card-red-bright);
-  background: var(--card-red);
-  color: var(--card-ivory);
-  box-shadow: 0 8px 18px rgba(179, 18, 31, 0.4);
-}
-
-/* stock badge */
-.stock-chip {
-  cursor: default;
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.25s ease, box-shadow 0.3s ease;
-}
-
-.stock-chip:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.5);
-}
-
-.stock-chip:not(.out):hover::before {
-  animation: dotPulse 0.9s ease-out infinite;
-}
-
-@keyframes dotPulse {
-  0%   { box-shadow: 0 0 0 0 rgba(76, 201, 138, 0.7); }
-  100% { box-shadow: 0 0 0 8px rgba(76, 201, 138, 0); }
-}
-
-/* ---------- Icons flip on hover ---------- */
-.wish-btn i,
-.btn-cart i,
-.btn-details i {
-  display: inline-block;
-  transform: perspective(300px) rotateY(0deg);
-  transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
-  backface-visibility: visible;
-}
-
-.wish-btn:hover i,
-.btn-cart:hover:not(:disabled) i,
-.btn-details:hover i {
-  transform: perspective(300px) rotateY(360deg);
-}
-
-/* the tick flips in when an item is added to the cart */
-.btn-cart.added i {
-  animation: iconFlip 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
-}
-
-@keyframes iconFlip {
-  from { transform: perspective(300px) rotateY(-180deg); }
-  to   { transform: perspective(300px) rotateY(0deg); }
-}
-
-/* ---------- Focus ---------- */
-.wish-btn:focus-visible,
-.btn-cart:focus-visible,
-.btn-details:focus-visible,
-.shoe-name a:focus-visible {
-  outline: 2px solid var(--card-ivory);
-  outline-offset: 2px;
-}
-
-/* ---------- Narrow cards: stack price above the buttons ---------- */
-@container (max-width: 310px) {
-  .shoe-price {
-    grid-column: 1 / -1;
-    padding-right: 0;
-    padding-bottom: 14px;
-  }
-
-  .shoe-actions {
-    grid-column: 1 / -1;
-    padding-top: 0;
-    border-top: 0;
-  }
-
-  .shoe-name {
-    font-size: 1.1rem;
-  }
-}
-
-/* ---------- Reduced motion ---------- */
-@media (prefers-reduced-motion: reduce) {
-  .shoe-card,
-  .shoe-card-img img,
-  .btn-cart,
-  .btn-details,
-  .wish-btn {
-    transition: none;
-  }
-
-  .shoe-card:hover {
-    transform: none;
-  }
-
-  .shoe-card:hover .shoe-card-img img {
-    transform: none;
-  }
-
-  .wish-btn.active,
-  .btn-cart.added i {
-    animation: none;
-  }
-
-  .wish-btn i,
-  .btn-cart i,
-  .btn-details i {
-    transition: none;
-  }
-
-  .shoe-brand,
-  .shoe-brand::before,
-  .shoe-brand::after,
-  .shoe-meta span:not(.dot),
-  .stock-chip {
-    transition: none;
-  }
-
-  .shoe-meta span:not(.dot):hover,
-  .stock-chip:hover {
-    transform: none;
-  }
-
-  .stock-chip:not(.out):hover::before {
-    animation: none;
-  }
-
-  .wish-btn:hover i,
-  .btn-cart:hover:not(:disabled) i,
-  .btn-details:hover i {
-    transform: none;
-  }
-}
+/* icons flip on hover */
+.wish-btn i, .btn-cart i, .btn-eye i { display: inline-block; transition: transform .6s; }
+.wish-btn:hover i, .btn-cart:hover:not(:disabled) i, .btn-eye:hover i { transform: rotateY(360deg); }

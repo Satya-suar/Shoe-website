@@ -1,129 +1,60 @@
-<div class="brand-page">
+<section class="page-hero">
+  <div class="container">
+    <p class="crumbs"><a routerLink="/">Home</a> / <a routerLink="/brands">Brands</a> / Add brand</p>
+    <div class="d-flex flex-wrap align-items-end justify-content-between gap-3">
+      <div>
+        <h1>Add new brand</h1>
+        <p>Create a brand for your shoe collection.</p>
+      </div>
+      <a routerLink="/brands" class="btn-kart btn-kart-ghost sm"><i class="bi bi-arrow-left"></i> Back to brands</a>
+    </div>
+  </div>
+</section>
 
-    <form
-        [formGroup]="brandForm"
-        (ngSubmit)="onSubmit()"
-        class="premium-form">
+<section class="section-sm">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-6">
+        <form class="kart-card pad form-card" [formGroup]="brandForm" (ngSubmit)="onSubmit()" novalidate>
 
-        <!-- Header -->
-        <div class="form-header d-flex justify-content-between">
+          <div class="mb-3">
+            <label class="form-label" for="brand-name">Brand name</label>
+            <input id="brand-name" type="text" class="form-control" formControlName="brandName" placeholder="Enter brand name"
+              [class.is-invalid]="brandName?.touched && brandName?.hasError('required')">
+            @if (brandName?.touched && brandName?.hasError('required')) {
+              <p class="field-error">Brand name is required.</p>
+            }
+          </div>
 
-            <div>
-                <h2>
-                    Add New Brand
-                    <i class="bi bi-tag-fill"></i>
-                </h2>
+          <div class="mb-4">
+            <label class="form-label">Brand logo</label>
+            <input #fileInput type="file" accept="image/*" hidden (change)="onFileSelect($event)">
 
-                <p>
-                    Create a new brand for your shoe collection.
-                </p>
-            </div>
-
-            <div>
-                <a routerLink="/brands" class="btn-view-all">
-                    <i class="bi bi-arrow-left"></i>
-                    Back to Brands
-                </a>
-            </div>
-
-        </div>
-
-
-        <!-- Brand Name -->
-        <div class="form-group">
-
-            <label>Brand Name</label>
-
-            <input
-                type="text"
-                formControlName="brandName"
-                placeholder="Enter brand name">
-
-            <small
-                *ngIf="
-                    brandName?.touched &&
-                    brandName?.hasError('required')
-                ">
-
-                Brand name is required
-
-            </small>
-
-        </div>
-
-
-        <!-- Brand Logo -->
-        <div class="form-group">
-
-            <label>Brand Logo</label>
-
-            <!-- Hidden File Input -->
-            <input
-                #fileInput
-                type="file"
-                accept="image/*"
-                hidden
-                (change)="onFileSelect($event)">
-
-
-            <!-- Upload Box -->
-            <div
-                class="upload-box"
-                *ngIf="!imagePreview"
-                (click)="fileInput.click()">
-
-                <div class="upload-content">
-
-                    <i class="bi bi-cloud-arrow-up"></i>
-
-                    <h4>
-                        Upload Brand Logo
-                    </h4>
-
-                    <p>
-                        Click or drag your logo here
-                    </p>
-
-                </div>
-
-            </div>
-
-
-            <!-- Preview -->
-            <div
-                class="preview-card"
-                *ngIf="imagePreview">
-
-                <img
-                    [src]="imagePreview"
-                    alt="Brand Logo">
-
-                <button
-                    type="button"
-                    class="replace-btn"
-                    (click)="fileInput.click()">
-
-                    <i class="bi bi-arrow-repeat"></i>
-
-                    Replace
-
+            @if (!imagePreview) {
+              <button type="button" class="upload-box" (click)="fileInput.click()">
+                <i class="bi bi-cloud-arrow-up"></i>
+                <strong>Upload brand logo</strong>
+                <span>Click to choose an image</span>
+              </button>
+            } @else {
+              <div class="preview-card">
+                <img [src]="imagePreview" alt="Brand logo preview">
+                <button type="button" class="btn-kart btn-kart-dark sm" (click)="fileInput.click()">
+                  <i class="bi bi-arrow-repeat"></i> Replace
                 </button>
+              </div>
+            }
+            @if (logoError && !selectedFile) { <p class="field-error">Please upload a logo.</p> }
+          </div>
 
-            </div>
-
-        </div>
-
-
-        <!-- Submit -->
-        <button
-            type="submit"
-            class="submit-btn"
-            [disabled]="brandForm.invalid || !selectedFile">
-
-            Add Brand
-
-        </button>
-
-    </form>
-
-</div>
+          <button type="submit" class="btn-kart btn-glow btn-flip lg block" [disabled]="brandForm.invalid || !selectedFile">
+            <span class="flip">
+              <span class="front"><i class="bi bi-plus-circle-fill"></i> Add brand</span>
+              <span class="back"><i class="bi bi-lightning-charge-fill"></i> Save it</span>
+            </span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

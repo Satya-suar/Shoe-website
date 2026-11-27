@@ -1,0 +1,321 @@
+/* ===== Settings: matches the navbar (black · oxblood red · ivory) ===== */
+
+.settings-page {
+  --set-bg: linear-gradient(180deg, #17151a, #0f0e11);
+  --set-line: var(--line, rgba(245, 239, 230, 0.14));
+  --set-ivory: var(--ivory, #f5efe6);
+  --set-muted: var(--slate, rgba(245, 239, 230, 0.62));
+  --set-crimson: var(--crimson, #b3121f);
+  --set-bright: var(--crimson-bright, #d71f2d);
+}
+
+/* ---------- Cards ---------- */
+.set-card {
+  padding: 26px 28px;
+  border: 1px solid var(--set-line);
+  border-radius: 2px;
+  background: var(--set-bg);
+  color: var(--set-ivory);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.4);
+}
+
+.set-card-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 6px;
+  font-family: var(--font-display, Georgia, serif);
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--set-ivory);
+}
+
+.set-card-title i {
+  color: var(--set-bright);
+  font-size: 1.05rem;
+}
+
+.set-note {
+  margin: 0 0 4px;
+  color: var(--set-muted);
+  font-size: 0.86rem;
+  line-height: 1.55;
+}
+
+/* ---------- Rows ---------- */
+.set-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--set-line);
+}
+
+.set-row:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.set-text {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  cursor: default;
+}
+
+label.set-text {
+  cursor: pointer;
+}
+
+.set-text strong {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--set-ivory);
+}
+
+.set-text small {
+  display: block;
+  max-width: 420px;
+  margin-top: 2px;
+  color: var(--set-muted);
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+/* ---------- Switches (Bootstrap default is blue) ---------- */
+.settings-page .form-switch {
+  flex-shrink: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.settings-page .form-switch .form-check-input {
+  float: none;
+  display: block;
+  width: 46px;
+  height: 26px;
+  margin: 0;
+  border: 1px solid rgba(245, 239, 230, 0.3);
+  border-radius: 999px;
+  background-color: rgba(245, 239, 230, 0.08);
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23f5efe6' fill-opacity='.7'/%3e%3c/svg%3e");
+  background-position: left center;
+  background-size: contain;
+  cursor: pointer;
+  transition: background-color 0.25s ease, border-color 0.25s ease, background-position 0.2s ease;
+}
+
+.settings-page .form-switch .form-check-input:checked {
+  border-color: var(--set-bright);
+  background-color: var(--set-crimson);
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23f5efe6'/%3e%3c/svg%3e");
+  background-position: right center;
+}
+
+.settings-page .form-switch .form-check-input:focus {
+  border-color: var(--set-bright);
+  box-shadow: 0 0 0 3px rgba(215, 31, 45, 0.25);
+}
+
+.settings-page .form-switch .form-check-input:focus-visible {
+  outline: 2px solid var(--set-ivory);
+  outline-offset: 2px;
+}
+
+/* ---------- Buttons ---------- */
+.set-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-shrink: 0;
+  padding: 10px 18px;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  line-height: 1;
+  text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+
+.set-btn:focus-visible {
+  outline: 2px solid var(--set-ivory);
+  outline-offset: 2px;
+}
+
+.set-btn-primary {
+  border-color: var(--set-crimson);
+  background: var(--set-crimson);
+  color: var(--set-ivory);
+}
+
+.set-btn-primary:hover {
+  border-color: var(--set-ivory);
+  background: transparent;
+  color: var(--set-ivory);
+}
+
+.set-btn-outline {
+  border-color: rgba(245, 239, 230, 0.28);
+  background: transparent;
+  color: var(--set-ivory);
+}
+
+.set-btn-outline:hover:not(:disabled) {
+  border-color: var(--set-bright);
+  background: rgba(179, 18, 31, 0.2);
+  color: var(--set-ivory);
+}
+
+.set-btn-danger {
+  border-color: var(--set-bright);
+  background: transparent;
+  color: var(--set-bright);
+}
+
+.set-btn-danger:hover {
+  background: var(--set-crimson);
+  color: var(--set-ivory);
+}
+
+.set-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* ---------- Account card ---------- */
+.acct-card {
+  border-top: 2px solid var(--set-bright);
+  background:
+    radial-gradient(80% 120% at 100% 0%, rgba(179, 18, 31, 0.28), transparent 70%),
+    var(--set-bg);
+}
+
+.acct-id {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 14px 0 20px;
+}
+
+.acct-avatar {
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+  outline: 2px solid var(--set-bright);
+  outline-offset: 2px;
+}
+
+.acct-avatar-fallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--set-ivory);
+  color: var(--set-crimson);
+  font-family: var(--font-display, Georgia, serif);
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.acct-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.acct-text strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-display, Georgia, serif);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.acct-text small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--set-muted);
+}
+
+/* ---------- Quick links (same look as navbar dropdown items) ---------- */
+.set-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--set-line);
+  border-radius: 2px;
+  background: rgba(245, 239, 230, 0.04);
+  color: var(--set-ivory);
+  font-size: 0.92rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.25s ease;
+}
+
+.set-link i:first-child {
+  color: var(--set-bright);
+  transition: color 0.2s ease;
+}
+
+.set-link .bi-chevron-right {
+  font-size: 0.75rem;
+  opacity: 0.55;
+}
+
+.set-link:hover {
+  border-color: var(--set-bright);
+  background: rgba(179, 18, 31, 0.22);
+  color: var(--set-ivory);
+  transform: translateX(4px);
+}
+
+.set-link:hover i:first-child {
+  color: var(--set-ivory);
+}
+
+.set-link:focus-visible {
+  outline: 2px solid var(--set-ivory);
+  outline-offset: 2px;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 575.98px) {
+  .set-card {
+    padding: 20px 18px;
+  }
+
+  /* destructive/data buttons drop under the label so nothing is squeezed */
+  .set-row:has(.set-btn) {
+    flex-wrap: wrap;
+  }
+
+  .set-row .set-btn {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .set-link,
+  .set-btn,
+  .settings-page .form-switch .form-check-input {
+    transition: none;
+  }
+
+  .set-link:hover {
+    transform: none;
+  }
+}

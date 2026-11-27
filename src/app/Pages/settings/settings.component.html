@@ -1,0 +1,127 @@
+<section class="page-hero">
+  <div class="container">
+    <p class="crumbs"><a routerLink="/">Home</a> / Settings</p>
+    <h1>Settings</h1>
+    <p>Choose how LuxeKart looks and behaves on this device.</p>
+  </div>
+</section>
+
+<section class="section-sm settings-page">
+  <div class="container">
+    <div class="row g-4">
+
+      <!-- Left column -->
+      <div class="col-lg-7">
+
+        <div class="set-card mb-4">
+          <h2 class="set-card-title"><i class="bi bi-sliders"></i> Preferences</h2>
+
+          <div class="set-row">
+            <label class="set-text" for="s-anim">
+              <strong>Animations</strong>
+              <small>Scroll effects, glow and hover motion. Turn off for a calmer, faster page.</small>
+            </label>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" role="switch" id="s-anim"
+                [checked]="store.settings().animations" (change)="toggle('animations', $event)">
+            </div>
+          </div>
+
+          <div class="set-row">
+            <label class="set-text" for="s-fill">
+              <strong>Fill checkout for me</strong>
+              <small>Use your profile details and first saved address when you order.</small>
+            </label>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" role="switch" id="s-fill"
+                [checked]="store.settings().prefillCheckout" (change)="toggle('prefillCheckout', $event)">
+            </div>
+          </div>
+        </div>
+
+        <div class="set-card mb-4">
+          <h2 class="set-card-title"><i class="bi bi-bell"></i> Notifications</h2>
+          <p class="set-note">Your choices are saved on this device and apply once notifications are switched on for your account.</p>
+
+          <div class="set-row">
+            <label class="set-text" for="s-orders">
+              <strong>Order updates</strong>
+              <small>Tell me about my orders.</small>
+            </label>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" role="switch" id="s-orders"
+                [checked]="store.settings().orderUpdates" (change)="toggle('orderUpdates', $event)">
+            </div>
+          </div>
+
+          <div class="set-row">
+            <label class="set-text" for="s-offers">
+              <strong>New arrivals and offers</strong>
+              <small>Tell me when new pieces arrive.</small>
+            </label>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" role="switch" id="s-offers"
+                [checked]="store.settings().offers" (change)="toggle('offers', $event)">
+            </div>
+          </div>
+        </div>
+
+        <div class="set-card">
+          <h2 class="set-card-title"><i class="bi bi-shield-check"></i> Data on this device</h2>
+          <p class="set-note">Your cart, wishlist, profile and invoices are stored in this browser only.</p>
+
+          <div class="set-row">
+            <div class="set-text"><strong>Cart</strong><small>{{ cart.count() }} {{ cart.count() === 1 ? 'item' : 'items' }}</small></div>
+            <button type="button" class="set-btn set-btn-outline" [disabled]="cart.count() === 0" (click)="clearCart()">Empty cart</button>
+          </div>
+          <div class="set-row">
+            <div class="set-text"><strong>Wishlist</strong><small>{{ wishlist.count() }} saved</small></div>
+            <button type="button" class="set-btn set-btn-outline" [disabled]="wishlist.count() === 0" (click)="clearWishlist()">Clear wishlist</button>
+          </div>
+          <div class="set-row">
+            <div class="set-text"><strong>Invoice copies</strong><small>{{ invoices.invoices().length }} saved</small></div>
+            <button type="button" class="set-btn set-btn-outline" [disabled]="invoices.invoices().length === 0" (click)="clearInvoices()">Delete invoices</button>
+          </div>
+          <div class="set-row">
+            <div class="set-text"><strong>Reset settings</strong><small>Go back to the default settings.</small></div>
+            <button type="button" class="set-btn set-btn-danger" (click)="resetSettings()">Reset settings</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right column -->
+      <div class="col-lg-5">
+        <div class="set-card acct-card mb-4">
+          <h2 class="set-card-title">Account</h2>
+          <div class="acct-id">
+            @if (user.profile().image) {
+              <img class="acct-avatar" [src]="user.profile().image" alt="" />
+            } @else {
+              <span class="acct-avatar acct-avatar-fallback">{{ user.initial() }}</span>
+            }
+            <div class="acct-text">
+              <strong>{{ user.profile().name }}</strong>
+              <small>{{ user.profile().email || 'No email added yet' }}</small>
+            </div>
+          </div>
+          <div class="d-flex flex-wrap gap-2">
+            <a routerLink="/profile" [queryParams]="{ edit: 1 }" class="set-btn set-btn-primary"><i class="bi bi-pencil-square"></i> Edit profile</a>
+            <a routerLink="/profile" [queryParams]="{ tab: 'address' }" class="set-btn set-btn-outline"><i class="bi bi-geo-alt"></i> Addresses</a>
+          </div>
+        </div>
+
+        <div class="set-card">
+          <h2 class="set-card-title">Quick links</h2>
+          <div class="d-grid gap-2">
+            <a routerLink="/orders" class="set-link"><i class="bi bi-box2"></i> My orders &amp; invoices <i class="bi bi-chevron-right ms-auto"></i></a>
+            <a routerLink="/help-center" class="set-link"><i class="bi bi-chat-dots"></i> Help center <i class="bi bi-chevron-right ms-auto"></i></a>
+            <a routerLink="/about" class="set-link"><i class="bi bi-info-circle"></i> About us <i class="bi bi-chevron-right ms-auto"></i></a>
+            <a routerLink="/add-product" class="set-link"><i class="bi bi-box-seam"></i> Add a product <i class="bi bi-chevron-right ms-auto"></i></a>
+            <a routerLink="/add-brand" class="set-link"><i class="bi bi-tags"></i> Add a brand <i class="bi bi-chevron-right ms-auto"></i></a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

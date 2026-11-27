@@ -1,0 +1,170 @@
+<section class="auth-page">
+
+  <!-- ============ Brand side (identical on login + register) ============ -->
+  <aside class="auth-brand" aria-hidden="false">
+    <div class="blob b1" aria-hidden="true"></div>
+    <div class="blob b2" aria-hidden="true"></div>
+    <div class="grid-lines" aria-hidden="true"></div>
+
+    <div class="diamonds" aria-hidden="true">
+      <span style="--x: 8%;  --s: 10px; --t: 15s; --d: 0s"></span>
+      <span style="--x: 22%; --s: 6px;  --t: 12s; --d: 3s"></span>
+      <span style="--x: 38%; --s: 14px; --t: 18s; --d: 1s"></span>
+      <span style="--x: 55%; --s: 8px;  --t: 13s; --d: 5s"></span>
+      <span style="--x: 70%; --s: 12px; --t: 16s; --d: 2s"></span>
+      <span style="--x: 84%; --s: 7px;  --t: 11s; --d: 6s"></span>
+      <span style="--x: 93%; --s: 11px; --t: 17s; --d: 4s"></span>
+    </div>
+
+    <a routerLink="/" class="brand-logo" aria-label="LuxeKart home">
+      <span class="logo-mark">LK</span>
+      <span class="logo-word">Luxe<em>Kart</em></span>
+    </a>
+
+    <div class="brand-center">
+      <div class="seal" aria-hidden="true">
+        <svg viewBox="0 0 220 220" class="seal-ring">
+          <defs><path id="sealArc" d="M110,110 m-86,0 a86,86 0 1,1 172,0 a86,86 0 1,1 -172,0" /></defs>
+          <circle cx="110" cy="110" r="106" class="r1" />
+          <circle cx="110" cy="110" r="64" class="r2" />
+          <text>
+            <textPath href="#sealArc" textLength="535" lengthAdjust="spacing">LUXEKART &#8226; AUTHENTICATED &#8226; PREMIUM &#8226; GENUINE &#8226; LUXEKART &#8226;</textPath>
+          </text>
+        </svg>
+        <span class="seal-core">LK</span>
+      </div>
+
+      <span class="eyebrow">Create account</span>
+      <h1>
+        <span class="ln"><span>Join the house</span></span>
+        <span class="ln"><span>of <em>luxury.</em></span></span>
+      </h1>
+
+      <p class="rot-line">
+        Discover
+        <span class="rotator">
+          <span class="rot-track">
+            <span>Watches</span>
+            <span>Handbags</span>
+            <span>Footwear</span>
+            <span>Fragrances</span>
+            <span>Jewellery</span>
+            <span>Watches</span>
+          </span>
+        </span>
+      </p>
+    </div>
+
+    <ul class="brand-perks">
+      <li style="--n: 0"><i class="bi bi-patch-check-fill"></i> 100% authenticated</li>
+      <li style="--n: 1"><i class="bi bi-truck"></i> Insured delivery</li>
+      <li style="--n: 2"><i class="bi bi-arrow-repeat"></i> 7-day returns</li>
+    </ul>
+  </aside>
+
+  <!-- ============ Form side ============ -->
+  <div class="auth-form-wrap">
+    <form class="auth-card wide" [class.shake]="error()" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+
+      <div class="card-top rv" style="--d: .05s">
+        <span class="card-icon"><i class="bi bi-person-plus"></i></span>
+        <div>
+          <span class="eyebrow">Register</span>
+          <h2>Create your account</h2>
+        </div>
+      </div>
+      <p class="auth-sub rv" style="--d: .12s">It takes less than a minute.</p>
+
+      @if (error()) {
+        <div class="auth-alert error" role="alert"><i class="bi bi-exclamation-octagon"></i> {{ error() }}</div>
+      }
+
+      <div class="grid">
+      <div class="cell rv" style="--d: 0.16s">
+        <div class="fld" [class.invalid]="f['name'].touched && f['name'].invalid">
+          <i class="bi bi-person"></i>
+          <input id="r-name" type="text" formControlName="name" autocomplete="name" placeholder=" ">
+          <label for="r-name">Full name</label>
+          <span class="bar"></span>
+        </div>
+        @if (f['name'].touched && f['name'].invalid) { <p class="field-error">Enter your full name.</p> }
+      </div>
+      <div class="cell rv" style="--d: 0.2s">
+        <div class="fld" [class.invalid]="f['email'].touched && f['email'].invalid">
+          <i class="bi bi-envelope"></i>
+          <input id="r-email" type="email" formControlName="email" autocomplete="email" placeholder=" ">
+          <label for="r-email">Email address</label>
+          <span class="bar"></span>
+        </div>
+        @if (f['email'].touched && f['email'].invalid) { <p class="field-error">Enter a valid email.</p> }
+      </div>
+      <div class="cell rv" style="--d: 0.24s">
+        <div class="fld" [class.invalid]="f['mobile'].touched && f['mobile'].invalid">
+          <i class="bi bi-phone"></i>
+          <input id="r-mobile" type="tel" formControlName="mobile" autocomplete="tel" placeholder=" ">
+          <label for="r-mobile">Mobile <em>(optional)</em></label>
+          <span class="bar"></span>
+        </div>
+        @if (f['mobile'].touched && f['mobile'].invalid) { <p class="field-error">Use 7 to 15 digits.</p> }
+      </div>
+      <div class="cell rv" style="--d: 0.28s">
+        <div class="fld" [class.invalid]="f['password'].touched && f['password'].invalid">
+          <i class="bi bi-lock"></i>
+          <input id="r-pass" [type]="showPassword() ? 'text' : 'password'" formControlName="password" autocomplete="new-password" placeholder=" ">
+          <label for="r-pass">Password</label>
+          <button type="button" class="eye" [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'"
+            (click)="showPassword.set(!showPassword())">
+            <i class="bi" [class.bi-eye]="!showPassword()" [class.bi-eye-slash]="showPassword()"></i>
+          </button>
+          <span class="bar"></span>
+        </div>
+        @if (f['password'].touched && f['password'].invalid) { <p class="field-error">8+ characters, a letter and a number.</p> }
+      </div>
+      <div class="cell rv" style="--d: 0.32s">
+        <div class="fld" [class.invalid]="f['confirm'].touched && (f['confirm'].invalid || form.hasError('mismatch'))">
+          <i class="bi bi-shield-lock"></i>
+          <input id="r-confirm" [type]="showConfirm() ? 'text' : 'password'" formControlName="confirm" autocomplete="new-password" placeholder=" ">
+          <label for="r-confirm">Confirm password</label>
+          <button type="button" class="eye" [attr.aria-label]="showConfirm() ? 'Hide password' : 'Show password'"
+            (click)="showConfirm.set(!showConfirm())">
+            <i class="bi" [class.bi-eye]="!showConfirm()" [class.bi-eye-slash]="showConfirm()"></i>
+          </button>
+          <span class="bar"></span>
+        </div>
+        @if (f['confirm'].touched && form.hasError('mismatch')) { <p class="field-error">Passwords do not match.</p> }
+        @else if (f['confirm'].touched && f['confirm'].invalid) { <p class="field-error">Confirm your password.</p> }
+      </div>
+
+        <!-- strength meter beside confirm -->
+        <div class="cell meter-cell rv" style="--d: .36s">
+          <div class="meter-row">
+            <div class="meter" [attr.data-level]="strength()" aria-hidden="true">
+              <span></span><span></span><span></span><span></span>
+            </div>
+            <small class="meter-label" [attr.data-level]="strength()">
+              {{ strength() ? strengthLabel() : 'Password strength' }}
+            </small>
+          </div>
+        </div>
+      </div>
+
+      <label class="check terms rv" style="--d: .4s" [class.invalid]="f['terms'].touched && f['terms'].invalid">
+        <input type="checkbox" formControlName="terms">
+        <span class="box" aria-hidden="true"></span>
+        <span>I agree to the <a routerLink="/about" class="auth-link">Terms</a> and <a routerLink="/about" class="auth-link">Privacy Policy</a>.
+          @if (f['terms'].touched && f['terms'].invalid) { <b class="inline-error">Required to continue.</b> }
+        </span>
+      </label>
+
+      <button type="submit" class="auth-btn rv" style="--d: .44s" [disabled]="loading()">
+        <span class="sheen" aria-hidden="true"></span>
+        @if (loading()) { <span class="spin"></span> Creating your account... } @else { <span>Create account</span> <i class="bi bi-arrow-right"></i> }
+      </button>
+
+      <div class="alt-row rv" style="--d: .5s">
+        <p class="auth-foot">Already a member? <a routerLink="/login" queryParamsHandling="preserve" class="auth-link">Sign in</a></p>
+        <a routerLink="/products" class="guest-btn"><i class="bi bi-gem"></i> Continue as guest</a>
+      </div>
+    </form>
+  </div>
+</section>

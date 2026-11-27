@@ -76,7 +76,7 @@ onFileSelect(event: any): void {
           icon: 'success',
           title: 'Brand Added!',
           text: res.message || 'Your brand has been added successfully.',
-          confirmButtonColor: '#16181d'
+          confirmButtonColor: '#e10b1f'
         });
         
         this.brandForm.reset();
@@ -89,7 +89,7 @@ onFileSelect(event: any): void {
           icon: 'error',
           title: 'Brand Failed',
           text: err?.error?.message || 'Something went wrong. Please try again.',
-          confirmButtonColor: '#16181d'
+          confirmButtonColor: '#e10b1f'
         });
       }
     });

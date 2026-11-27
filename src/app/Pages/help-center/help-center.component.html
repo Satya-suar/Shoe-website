@@ -1,0 +1,108 @@
+<section class="page-hero">
+  <div class="container">
+    <p class="crumbs"><a routerLink="/">Home</a> / Help center</p>
+    <h1>How can we help?</h1>
+    <p>Chat with our concierge helper or browse answers to common questions.</p>
+  </div>
+</section>
+
+<section class="section-sm">
+  <div class="container">
+    <div class="row g-4">
+
+      <!-- ================= CHAT ================= -->
+      <div class="col-lg-6">
+        <div class="chat-card">
+          <div class="chat-head">
+            <span class="chat-bot"><i class="bi bi-stars"></i></span>
+            <div class="chat-id">
+              <strong>LuxeKart concierge</strong>
+              <small><span class="live-dot"></span> Automated answers</small>
+            </div>
+          </div>
+
+          <div class="chat-thread" #thread aria-live="polite">
+            @for (m of messages(); track $index) {
+              <div class="bubble-row" [class.me]="m.from === 'me'">
+                <div class="bubble" [class.me]="m.from === 'me'">
+                  <p class="mb-0">{{ m.text }}</p>
+                  @if (m.link) {
+                    <a class="bubble-link" [routerLink]="m.link.url" [queryParams]="m.link.params">
+                      {{ m.link.label }} <i class="bi bi-arrow-right"></i>
+                    </a>
+                  }
+                </div>
+              </div>
+            }
+            @if (typing()) {
+              <div class="bubble-row"><div class="bubble typing"><span></span><span></span><span></span></div></div>
+            }
+          </div>
+
+          <div class="chat-suggest">
+            @for (s of suggestions; track s) {
+              <button type="button" class="h-chip" (click)="send(s)">{{ s }}</button>
+            }
+          </div>
+
+          <form class="chat-input" (ngSubmit)="send()">
+            <input type="text" name="msg" class="chat-field" [(ngModel)]="draft" placeholder="Type your question" aria-label="Type your question" autocomplete="off">
+            <button type="submit" class="send-btn" [disabled]="!draft.trim() || typing()" aria-label="Send message"><i class="bi bi-send-fill"></i></button>
+          </form>
+
+          <p class="chat-note">This helper gives automated answers. For anything else, <a routerLink="/contact">contact our team</a>.</p>
+        </div>
+      </div>
+
+      <!-- ================= FAQ ================= -->
+      <div class="col-lg-6">
+        <div class="faq-card">
+          <span class="faq-eyebrow">Help center</span>
+          <h2 class="faq-title">Common questions</h2>
+
+          <div class="search-field">
+            <i class="bi bi-search"></i>
+            <input type="search" class="faq-search" placeholder="Search help" aria-label="Search help"
+              [value]="faqSearch()" (input)="faqSearch.set($any($event.target).value)">
+          </div>
+
+          <div class="faq-topics" role="group" aria-label="Filter by topic">
+            @for (t of topics; track t) {
+              <button type="button" class="h-chip light" [class.active]="topic() === t" (click)="topic.set(t)">{{ t }}</button>
+            }
+          </div>
+
+          <div class="faq-list">
+            @for (f of visibleFaqs(); track f.id; let n = $index) {
+              <div class="faq" [class.open]="openId() === f.id">
+                <button type="button" class="faq-q" [attr.aria-expanded]="openId() === f.id" (click)="toggleFaq(f.id)">
+                  <span class="faq-n">{{ n < 9 ? '0' + (n + 1) : n + 1 }}</span>
+                  <span class="faq-text">{{ f.q }}</span>
+                  <i class="bi bi-plus-lg"></i>
+                </button>
+                @if (openId() === f.id) {
+                  <div class="faq-a">
+                    <p>{{ f.a }}</p>
+                    <button type="button" class="h-chip light" (click)="send(f.q)"><i class="bi bi-chat-dots"></i> Ask the helper</button>
+                  </div>
+                }
+              </div>
+            } @empty {
+              <div class="empty-state my-2">
+                <span class="empty-ic"><i class="bi bi-search"></i></span>
+                <h3>No answers found</h3>
+                <p class="mb-3">Try other words, or ask our team.</p>
+                <a routerLink="/contact" class="btn-kart sm">Contact us</a>
+              </div>
+            }
+          </div>
+
+          <div class="faq-foot">
+            <i class="bi bi-headset"></i>
+            <span>Still need help? <a routerLink="/contact">Speak to our concierge</a></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

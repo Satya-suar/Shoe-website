@@ -1,0 +1,110 @@
+<!-- ================= BANNER ================= -->
+<section class="page-hero">
+  <div class="hero-glow" aria-hidden="true"></div>
+  <div class="container position-relative">
+    <p class="crumbs"><a routerLink="/">Home</a> / Wishlist</p>
+    <div class="row align-items-end g-3">
+      <div class="col-lg-7">
+        <h1>Your wishlist</h1>
+        <p class="hero-count">
+          @if (wishlist.count() > 0) { {{ wishlist.count() }} saved {{ wishlist.count() === 1 ? 'pair' : 'pairs' }}, ready when you are. }
+          @else { Save the pairs you love and find them here. }
+        </p>
+      </div>
+      @if (wishlist.count() > 0) {
+        <div class="col-lg-5 d-flex flex-wrap gap-2 justify-content-lg-end">
+          <button type="button" class="btn-red" (click)="moveAllToCart()"><i class="bi bi-bag-plus"></i> Move all to cart</button>
+          <button type="button" class="btn-ghost" (click)="clearAll()"><i class="bi bi-trash3"></i> Clear</button>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ================= LIST ================= -->
+<section class="wl-section">
+  <div class="container">
+
+    @if (wishlist.items().length === 0) {
+      <div class="empty-state">
+        <span class="empty-ic"><i class="bi bi-heart"></i></span>
+        <h2>No saved shoes yet</h2>
+        <p>Tap the heart on any shoe to save it here.</p>
+        <a routerLink="/products" class="btn-red"><i class="bi bi-bag"></i> Browse shoes</a>
+      </div>
+    } @else {
+
+      <!-- search + sort -->
+      <div class="panel wl-toolbar mb-4">
+        <div class="row g-2 align-items-center">
+          <div class="col-12 col-md">
+            <div class="search-field">
+              <i class="bi bi-search"></i>
+              <input type="search" class="field" placeholder="Search your wishlist" aria-label="Search your wishlist"
+                [value]="search()" (input)="search.set($any($event.target).value)" />
+            </div>
+          </div>
+          <div class="col-12 col-md-auto">
+            <select class="field field-select" aria-label="Sort wishlist" (change)="sortBy.set($any($event.target).value)">
+              <option value="added" [selected]="sortBy() === 'added'">Order saved</option>
+              <option value="price-asc" [selected]="sortBy() === 'price-asc'">Price: low to high</option>
+              <option value="price-desc" [selected]="sortBy() === 'price-desc'">Price: high to low</option>
+              <option value="name" [selected]="sortBy() === 'name'">Name: A to Z</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- cards -->
+      <div class="row g-3 g-lg-4">
+        @for (item of visible(); track item.id; let i = $index) {
+          <div class="col-12 col-sm-6 col-lg-4 col-xl-3" appReveal [revealDelay]="(i % 4) * 80">
+            <article class="wish-card h-100">
+
+              <div class="wish-img">
+                <div class="ratio ratio-4x3">
+                  <a [routerLink]="['/products', item.id]" [attr.aria-label]="'View ' + item.name">
+                    <img [src]="item.image" [alt]="item.name" loading="lazy">
+                  </a>
+                </div>
+                <span class="wish-badge"><i class="bi bi-heart-fill"></i> Saved</span>
+                <button type="button" class="wish-remove" title="Remove from wishlist"
+                  [attr.aria-label]="'Remove ' + item.name + ' from wishlist'" (click)="remove(item)">
+                  <i class="bi bi-heart-fill"></i>
+                </button>
+              </div>
+
+              <div class="wish-body d-flex flex-column">
+                <h3 class="wish-name"><a [routerLink]="['/products', item.id]">{{ item.name }}</a></h3>
+                <p class="wish-price">{{ item.price | currency:'INR':'symbol':'1.0-2' }}</p>
+
+                <div class="row g-2 flex-nowrap mt-auto">
+                  <div class="col">
+                    <button type="button" class="btn-cart w-100" (click)="moveToCart(item)">
+                      <i class="bi bi-bag-plus"></i> Move to cart
+                    </button>
+                  </div>
+                  <div class="col-auto">
+                    <a class="btn-eye" [routerLink]="['/products', item.id]" [attr.aria-label]="'View ' + item.name">
+                      <i class="bi bi-eye"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+            </article>
+          </div>
+        } @empty {
+          <div class="col-12">
+            <div class="empty-state">
+              <span class="empty-ic"><i class="bi bi-search"></i></span>
+              <h3>No saved shoes match</h3>
+              <p>Nothing in your wishlist matches "{{ search() }}".</p>
+              <button type="button" class="btn-line" (click)="search.set('')">Clear search</button>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</section>

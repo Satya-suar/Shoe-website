@@ -1,83 +1,154 @@
+
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { Component, OnInit, inject } from '@angular/core';
+import { ActivatedRoute, RouterLink, Router } from '@angular/router';
+
 import { MyServiceService } from '../../Common-Service/my-service.service';
-import { OrderFormComponent } from '../order-form/order-form.component';
+import { CartService } from '../../Common-Service/cart.service';
+import { WishlistService } from '../../Common-Service/wishlist.service';
+import { ToastService } from '../../Common-Service/toast.service';
+
+import { RevealDirective } from '../../Shared/reveal.directive';
 
 @Component({
   selector: 'app-product-details',
-  imports: [CommonModule, RouterLink, OrderFormComponent],
+  imports: [CommonModule, RouterLink, RevealDirective],
   templateUrl: './product-details.component.html',
   styleUrl: './product-details.component.css'
 })
-export class ProductDetailsComponent implements OnInit, OnDestroy {
+export class ProductDetailsComponent implements OnInit {
 
   product: any = null;
   isLoading = true;
   notFound = false;
-  showOrderForm = false;
+
   imageUrl: string;
+  qty = 1;
+
+  cart = inject(CartService);
+  wishlist = inject(WishlistService);
+  private toast = inject(ToastService);
 
   constructor(
     private route: ActivatedRoute,
-    private myService: MyServiceService
+    private myService: MyServiceService,
+    private router: Router
   ) {
     this.imageUrl = this.myService.imageUrl;
   }
 
-  // opens the popup (no longer toggles)
-  openBuyForm() {
-    this.showOrderForm = true;
-    document.body.style.overflow = 'hidden';   // lock page scroll behind the popup
+  // ---------- Quantity ----------
+  changeQty(delta: number): void {
+    this.qty = Math.min(10, Math.max(1, this.qty + delta));
   }
 
-  closeBuyForm() {
-    this.showOrderForm = false;
-    document.body.style.overflow = '';
+  // ---------- Add to Cart ----------
+  addToCart(): void {
+
+    if (!this.product?.isStock) return;
+
+    this.cart.add(
+      {
+        id: this.product.productId,
+        name: this.product.productName,
+        price: Number(this.product.price),
+        image: this.imageUrl + this.product.productImage,
+        size: this.product.size != null
+          ? String(this.product.size)
+          : undefined
+      },
+      this.qty
+    );
+
+    this.toast.show(
+      `${this.qty} x ${this.product.productName} added to cart`,
+      'success',
+      'bi-bag-check-fill'
+    );
   }
 
-  // close popup with the Esc key
-  @HostListener('document:keydown.escape')
-  onEscape() {
-    if (this.showOrderForm) {
-      this.closeBuyForm();
+  // ---------- Wishlist ----------
+  toggleWishlist(): void {
+
+    if (!this.product) return;
+
+    const wasSaved = this.wishlist.has(this.product.productId);
+
+    this.wishlist.toggle({
+      id: this.product.productId,
+      name: this.product.productName,
+      price: Number(this.product.price),
+      image: this.imageUrl + this.product.productImage
+    });
+
+    this.toast.show(
+      wasSaved ? 'Removed from wishlist' : 'Saved to wishlist',
+      wasSaved ? 'info' : 'success',
+      'bi-heart-fill'
+    );
+  }
+
+goToCheckout(): void {
+
+  if (!this.product || !this.product.isStock) {
+    return;
+  }
+
+  this.router.navigate(
+    ['/checkout', this.product.productId],
+    {
+      queryParams: {
+        quantity: this.qty
+      }
     }
-  }
+  );
 
+}
+  // ---------- Load Product ----------
   ngOnInit(): void {
+
     this.route.paramMap.subscribe(params => {
+
       const id = Number(params.get('id'));
+
       if (id > 0) {
         this.loadProduct(id);
-      }
-    });
-  }
-
-  ngOnDestroy(): void {
-    document.body.style.overflow = '';          // release scroll lock when leaving the page
-  }
-
-  loadProduct(id: number) {
-    this.isLoading = true;
-    this.notFound = false;
-
-    this.myService.getProductDetails(id).subscribe({
-      next: (res) => {
-        this.product = res.data;
-        this.isLoading = false;
-      },
-      error: () => {
+      } else {
         this.isLoading = false;
         this.notFound = true;
       }
+
     });
+
   }
 
-  // called by the order form once an order has been placed successfully
-  onOrderPlaced() {
-    if (this.product) {
-      this.product.isStock = false;
-    }
-    this.closeBuyForm();
+  loadProduct(id: number): void {
+
+    this.isLoading = true;
+    this.notFound = false;
+    this.qty = 1;
+
+    this.myService.getProductDetails(id).subscribe({
+
+      next: (res) => {
+
+        this.product = res.data;
+
+        this.isLoading = false;
+        this.notFound = !this.product;
+
+      },
+
+      error: () => {
+
+        this.product = null;
+        this.isLoading = false;
+        this.notFound = true;
+
+      }
+
+    });
+
   }
+
 }

@@ -1,0 +1,27 @@
+<section class="out-page">
+  <div class="out-glow" aria-hidden="true"></div>
+
+  <div class="out-card">
+    @if (!done()) {
+      <span class="out-ic"><i class="bi bi-box-arrow-right"></i></span>
+      <span class="eyebrow">Sign out</span>
+      <h1>Leaving so soon{{ name ? ', ' + name.split(' ')[0] : '' }}?</h1>
+      <p>You will need to sign in again to see your orders, wishlist and profile.</p>
+
+      <div class="out-actions">
+        <button type="button" class="out-btn primary" (click)="confirm()"><i class="bi bi-box-arrow-right"></i> Sign out</button>
+        <button type="button" class="out-btn ghost" (click)="cancel()">Stay signed in</button>
+      </div>
+    } @else {
+      <span class="out-ic ok"><i class="bi bi-check2-circle"></i></span>
+      <span class="eyebrow">See you soon</span>
+      <h1>You have been signed out.</h1>
+      <p>Thank you for visiting LuxeKart. Your cart and wishlist are saved on this device.</p>
+
+      <div class="out-actions">
+        <a routerLink="/login" class="out-btn primary"><i class="bi bi-person"></i> Sign in again</a>
+        <a routerLink="/products" class="out-btn ghost">Continue browsing</a>
+      </div>
+    }
+  </div>
+</section>

@@ -1,103 +1,282 @@
-<section class="section details-section">
+
+<section class="section-sm details-section">
   <div class="container">
 
-    <a routerLink="/brands" class="btn-view-all back-link">
-      <i class="bi bi-arrow-left"></i> Back to Brands
-    </a>
+    <!-- Top Navigation -->
+    <div class="dt-bar">
+      <a routerLink="/products" class="dt-back">
+        <i class="bi bi-arrow-left"></i> Back to collections
+      </a>
 
-    <div *ngIf="isLoading" class="loader-row">
-      <div class="dot-spinner"></div>
+      <p class="dt-crumbs">
+        <a routerLink="/">Home</a> /
+        <a routerLink="/products">Collections</a>
+
+        @if (product) {
+          / <span>{{ product.productName }}</span>
+        }
+      </p>
     </div>
 
-    <div *ngIf="!isLoading && notFound" class="empty-state">
-      <p>We couldn&rsquo;t find this product. It may have been removed.</p>
-      <a routerLink="/brands" class="btn-outline-ink">Back to Brands</a>
-    </div>
+    <!-- Loading -->
+    @if (isLoading) {
 
-    <div *ngIf="!isLoading && product" class="details-grid">
-
-      <!-- Product display -->
-      <div class="details-media">
-        <div class="media-frame">
-          <img [src]="imageUrl + product.productImage" [alt]="product.productName" class="media-img">
-          <span class="stock-chip" [class.out]="!product.isStock">
-            <i class="bi" [ngClass]="product.isStock ? 'bi-check-circle' : 'bi-x-circle'"></i>
-            {{ product.isStock ? 'Available' : 'Out of stock' }}
-          </span>
-        </div>
+      <div class="loader-row">
+        <div class="dot-spinner"></div>
       </div>
 
-      <!-- Product info -->
-      <div class="details-copy">
-        <p class="eyebrow">{{ product.brandName }}</p>
-        <h1 class="details-title">{{ product.productName }}</h1>
+    } @else if (notFound) {
 
-        <p class="details-price">{{ product.price | currency : 'INR' }}</p>
+      <!-- Product Not Found -->
+      <div class="empty-state">
+        <span class="empty-ic">
+          <i class="bi bi-emoji-frown"></i>
+        </span>
 
-        <div class="details-meta">
-          <div class="meta-chip">
-            <span class="meta-label">Size</span>
-            <span class="meta-value">{{ product.size }}</span>
-          </div>
+        <h2>Product not found</h2>
 
-          <div class="meta-chip">
-            <span class="meta-label">Colour</span>
-            <span class="meta-value">
-              <i class="color-dot" [style.background]="product.color"></i>
-              {{ product.color }}
-            </span>
-          </div>
+        <p>
+          We couldn&rsquo;t find this product. It may have been removed.
+        </p>
 
-          <div class="meta-chip">
-            <span class="meta-label">Brand</span>
-            <span class="meta-value">{{ product.brandName }}</span>
-          </div>
-        </div>
-
-        <p class="details-desc">{{ product.productDescription }}</p>
-
-        <div class="action-row">
-          <button *ngIf="product.isStock" type="button" class="btn-volt btn-buy" (click)="openBuyForm()">
-            <i class="bi bi-bag-check"></i> Buy now
-          </button>
-          <a routerLink="/brands" class="btn-outline-ink btn-buy">Continue browsing</a>
-        </div>
-
-        <div *ngIf="!product.isStock" class="oos-note">
-          <i class="bi bi-info-circle"></i> This shoe is currently out of stock. Please check back later.
-        </div>
-
-        <ul class="assurance">
-          <li><i class="bi bi-truck"></i> Fast delivery</li>
-          <li><i class="bi bi-arrow-repeat"></i> Easy returns</li>
-          <li><i class="bi bi-shield-check"></i> 100% authentic</li>
-        </ul>
+        <a routerLink="/products" class="btn-kart">
+          Back to collections
+        </a>
       </div>
-    </div>
+
+    } @else if (product) {
+
+      <div class="row g-4 g-lg-5 align-items-start">
+
+        <!-- Product Image -->
+        <div class="col-lg-6">
+
+          <div class="dt-gallery" appReveal revealFrom="left">
+
+            <div class="details-img">
+
+              <img
+                [src]="imageUrl + product.productImage"
+                [alt]="product.productName">
+
+              <!-- Stock Status -->
+              <span
+                class="stock-chip"
+                [class.out]="!product.isStock">
+
+                <i class="dot"></i>
+                {{ product.isStock ? 'Available' : 'Out of stock' }}
+
+              </span>
+
+              <!-- Wishlist Button -->
+              <button
+                type="button"
+                class="wish-float"
+                [class.active]="wishlist.has(product.productId)"
+                [attr.aria-pressed]="wishlist.has(product.productId)"
+                [attr.aria-label]="wishlist.has(product.productId)
+                  ? 'Remove from wishlist'
+                  : 'Add to wishlist'"
+                (click)="toggleWishlist()">
+
+                <i
+                  class="bi"
+                  [class.bi-heart]="!wishlist.has(product.productId)"
+                  [class.bi-heart-fill]="wishlist.has(product.productId)">
+                </i>
+
+              </button>
+
+            </div>
+
+            <!-- Trust Information -->
+            <ul class="dt-trust">
+
+              <li>
+                <i class="bi bi-patch-check-fill"></i>
+                <span>100% authenticated</span>
+              </li>
+
+              <li>
+                <i class="bi bi-truck"></i>
+                <span>Insured delivery</span>
+              </li>
+
+              <li>
+                <i class="bi bi-arrow-repeat"></i>
+                <span>7-day returns</span>
+              </li>
+
+            </ul>
+
+          </div>
+
+        </div>
+
+        <!-- Product Information -->
+        <div class="col-lg-6" appReveal revealFrom="right">
+
+          <div class="dt-info">
+
+            <!-- Brand -->
+            <p class="eyebrow dt-brand">
+              <i class="bi bi-gem"></i>
+              {{ product.brandName }}
+            </p>
+
+            <!-- Product Name -->
+            <h1 class="details-title">
+              {{ product.productName }}
+            </h1>
+
+            <!-- Product Specifications -->
+            <div class="dt-specs">
+
+              <div class="spec-card">
+                <i class="bi bi-rulers"></i>
+                <span>Size</span>
+                <strong>{{ product.size }}</strong>
+              </div>
+
+              <div class="spec-card">
+                <i class="bi bi-palette"></i>
+                <span>Color</span>
+                <strong>{{ product.color }}</strong>
+              </div>
+
+              <div class="spec-card">
+                <i class="bi bi-patch-check"></i>
+                <span>Brand</span>
+                <strong>{{ product.brandName }}</strong>
+              </div>
+
+            </div>
+
+            <!-- Product Price -->
+            <p class="details-price">
+              {{ product.price | currency : 'INR' : 'symbol' : '1.0-2' }}
+            </p>
+
+            <!-- Product Description -->
+            <p class="details-desc">
+              {{ product.productDescription }}
+            </p>
+
+            @if (product.isStock) {
+
+              <!-- Quantity and Total -->
+              <div class="dt-buy">
+
+                <div
+                  class="qty"
+                  role="group"
+                  aria-label="Quantity">
+
+                  <button
+                    type="button"
+                    aria-label="Decrease quantity"
+                    [disabled]="qty <= 1"
+                    (click)="changeQty(-1)">
+
+                    &minus;
+
+                  </button>
+
+                  <span>{{ qty }}</span>
+
+                  <button
+                    type="button"
+                    aria-label="Increase quantity"
+                    [disabled]="qty >= 10"
+                    (click)="changeQty(1)">
+
+                    +
+
+                  </button>
+
+                </div>
+
+                <span class="dt-total">
+                  Total
+
+                  <strong>
+                    {{ product.price * qty | currency : 'INR' : 'symbol' : '1.0-2' }}
+                  </strong>
+                </span>
+
+              </div>
+
+              <!-- Product Actions -->
+              <div class="dt-actions">
+
+                <!-- Add to Cart -->
+                <button
+                  type="button"
+                  class="btn-kart btn-glow btn-flip sm"
+                  (click)="addToCart()">
+
+                  <span class="flip">
+
+                    <span class="front">
+                      <i class="bi bi-bag-plus"></i>
+                      Add to cart
+                    </span>
+
+                    <span class="back">
+                      <i class="bi bi-lightning-charge-fill"></i>
+                      Grab it
+                    </span>
+
+                  </span>
+
+                </button>
+
+                <!-- Buy Now - Navigate to Checkout -->
+                <button
+                  type="button"
+                  class="btn-kart btn-kart-dark btn-flip sm"
+                  (click)="goToCheckout()">
+
+                  <span class="flip">
+
+                    <span class="front">
+                      <i class="bi bi-bag-check"></i>
+                      Buy now
+                    </span>
+
+                    <span class="back">
+                      <i class="bi bi-arrow-right-circle"></i>
+                      Check out
+                    </span>
+
+                  </span>
+
+                </button>
+
+              </div>
+
+            } @else {
+
+              <!-- Out of Stock Message -->
+              <div class="oos-note">
+
+                <i class="bi bi-info-circle"></i>
+
+                This piece is currently out of stock.
+                Save it to your wishlist and check back later.
+
+              </div>
+
+            }
+
+          </div>
+
+        </div>
+
+      </div>
+
+    }
+
   </div>
 </section>
-
-<!-- Buy now popup -->
-<div class="buy-backdrop" *ngIf="product && product.isStock && showOrderForm" (click)="closeBuyForm()">
-  <div class="buy-dialog" role="dialog" aria-modal="true" aria-label="Order form"
-       (click)="$event.stopPropagation()">
-
-    <button type="button" class="buy-close" (click)="closeBuyForm()" aria-label="Close">
-      <i class="bi bi-x-lg"></i>
-    </button>
-
-    <div class="buy-summary">
-      <img [src]="imageUrl + product.productImage" [alt]="product.productName">
-      <div class="buy-summary-text">
-        <p class="buy-brand">{{ product.brandName }}</p>
-        <p class="buy-name">{{ product.productName }}</p>
-        <p class="buy-meta">Size {{ product.size }} &bull; {{ product.color }}</p>
-      </div>
-      <span class="buy-price">{{ product.price | currency : 'INR' }}</span>
-    </div>
-
-    <div class="buy-body">
-      <app-order-form [product]="product" (orderPlaced)="onOrderPlaced()"></app-order-form>
-    </div>
-  </div>
-</div>

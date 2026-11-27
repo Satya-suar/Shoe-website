@@ -1,5 +1,42 @@
 <app-banner></app-banner>
 <app-brands [limit]="4" [showViewAll]="true"></app-brands>
 <app-popular-products></app-popular-products>
-<app-happy-customer></app-happy-customer>
 
+<!-- Why shop with us: black cards that flip to red on hover -->
+<section class="section why-shoe-kart">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow">Why ShoeKart</p>
+      <h2 class="section-title">Made for people on the move</h2>
+    </div>
+
+    <div class="row g-3 g-lg-4">
+      @for (f of features; track f.title; let i = $index) {
+        <div class="col-12 col-sm-6 col-lg-3" appReveal [revealDelay]="i * 100">
+          <a class="why-card" [routerLink]="f.link" [attr.aria-label]="f.title + ': ' + f.cta">
+            <div class="why-inner">
+
+              <!-- front -->
+              <div class="why-face why-front">
+                <span class="why-num">0{{ i + 1 }}</span>
+                <span class="why-ic"><i [class]="'bi ' + f.icon"></i></span>
+                <h3 class="why-title">{{ f.title }}</h3>
+                <p class="why-text">{{ f.text }}</p>
+              </div>
+
+              <!-- back -->
+              <div class="why-face why-back" aria-hidden="true">
+                <i [class]="'bi ' + f.icon + ' why-back-ic'"></i>
+                <p class="why-back-title">{{ f.title }}</p>
+                <span class="why-back-cta">{{ f.cta }} <i class="bi bi-arrow-right"></i></span>
+              </div>
+
+            </div>
+          </a>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<app-happy-customer></app-happy-customer>

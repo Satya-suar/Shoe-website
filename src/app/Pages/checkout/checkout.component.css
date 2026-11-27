@@ -1,0 +1,12 @@
+.co-form { border-top: 5px solid var(--red); }
+.saved-select { width: auto; max-width: 240px; border-radius: 999px; }
+
+.co-summary { padding: 26px; box-shadow: var(--glow-sm), 0 18px 40px rgba(0, 0, 0, 0.25); }
+.co-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px dashed rgba(255, 255, 255, 0.2); }
+.co-item img { width: 56px; height: 56px; border-radius: 12px; object-fit: cover; background: #222; }
+.co-name { margin: 0; font-weight: 700; line-height: 1.25; }
+.co-meta { margin: 2px 0 0; font-size: 0.82rem; color: rgba(255, 255, 255, 0.6); }
+.co-total { display: flex; justify-content: space-between; align-items: baseline; padding-top: 16px; }
+.co-total strong { font-family: var(--font-display); font-size: 2.2rem; line-height: 1; }
+.co-note { margin: 14px 0 0; font-size: 0.84rem; color: rgba(255, 255, 255, 0.6); }
+.co-note i { color: var(--red); margin-right: 4px; }

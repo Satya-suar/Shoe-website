@@ -1,0 +1,404 @@
+
+<!-- Checkout Hero -->
+<section class="page-hero">
+  <div class="container">
+
+    <p class="crumbs">
+      <a routerLink="/">Home</a> /
+      <a routerLink="/cart">Cart</a> /
+      Checkout
+    </p>
+
+    <h1>Checkout</h1>
+
+    <p>Tell us where to send your pairs.</p>
+
+  </div>
+</section>
+
+
+<section class="section-sm">
+
+  <div class="container">
+
+    <!-- Loading Product -->
+    @if (isLoading) {
+
+      <div class="loader-row">
+        <div class="dot-spinner"></div>
+      </div>
+
+    }
+
+    <!-- Product Not Found -->
+    @else if (notFound) {
+
+      <div class="empty-state">
+
+        <span class="empty-ic">
+          <i class="bi bi-emoji-frown"></i>
+        </span>
+
+        <h2>Product not available</h2>
+
+        <p>
+          This product could not be found or is currently out of stock.
+          Please browse our collections for other available pairs.
+        </p>
+
+        <a routerLink="/products" class="btn-kart">
+          Browse shoes
+        </a>
+
+      </div>
+
+    }
+
+    <!-- Empty Cart -->
+    @else if (checkoutItems().length === 0) {
+
+      <div class="empty-state">
+
+        <span class="empty-ic">
+          <i class="bi bi-bag"></i>
+        </span>
+
+        <h2>Nothing to check out</h2>
+
+        <p>
+          Your cart is empty. Add a pair first.
+        </p>
+
+        <a routerLink="/products" class="btn-kart">
+          Browse shoes
+        </a>
+
+      </div>
+
+    }
+
+    @else {
+
+      <div class="row g-4">
+
+        <!-- Delivery Details -->
+        <div class="col-lg-7">
+
+          <form
+            class="kart-card pad co-form"
+            [formGroup]="form"
+            (ngSubmit)="placeOrder()"
+            novalidate>
+
+            <h2 class="card-title-kart">
+              Delivery details
+            </h2>
+
+            <div class="row g-3">
+
+              <!-- Full Name -->
+              <div class="col-md-6">
+
+                <label class="form-label" for="co-name">
+                  Full name
+                </label>
+
+                <input
+                  id="co-name"
+                  type="text"
+                  class="form-control"
+                  formControlName="customerName"
+                  autocomplete="name"
+                  [class.is-invalid]="f['customerName'].touched && f['customerName'].invalid"
+                  placeholder="e.g. Rahul Sharma">
+
+                @if (f['customerName'].touched && f['customerName'].invalid) {
+
+                  <p class="field-error">
+                    Please enter your full name (at least 3 characters).
+                  </p>
+
+                }
+
+              </div>
+
+
+              <!-- Mobile Number -->
+              <div class="col-md-6">
+
+                <label class="form-label" for="co-mobile">
+                  Mobile number
+                </label>
+
+                <input
+                  id="co-mobile"
+                  type="text"
+                  inputmode="numeric"
+                  maxlength="10"
+                  class="form-control"
+                  formControlName="mobileNumber"
+                  autocomplete="tel"
+                  [class.is-invalid]="f['mobileNumber'].touched && f['mobileNumber'].invalid"
+                  placeholder="10 digit mobile number">
+
+                @if (f['mobileNumber'].touched && f['mobileNumber'].invalid) {
+
+                  <p class="field-error">
+                    Please enter a valid 10 digit mobile number.
+                  </p>
+
+                }
+
+              </div>
+
+
+              <!-- Email -->
+              <div class="col-12">
+
+                <label class="form-label" for="co-email">
+                  Email
+                </label>
+
+                <input
+                  id="co-email"
+                  type="email"
+                  class="form-control"
+                  formControlName="email"
+                  autocomplete="email"
+                  [class.is-invalid]="f['email'].touched && f['email'].invalid"
+                  placeholder="you&#64;example.com">
+
+                @if (f['email'].touched && f['email'].invalid) {
+
+                  <p class="field-error">
+                    Please enter a valid email address.
+                  </p>
+
+                }
+
+              </div>
+
+
+              <!-- Delivery Address -->
+              <div class="col-12">
+
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+
+                  <label class="form-label mb-0" for="co-address">
+                    Delivery address
+                  </label>
+
+                  @if (user.addresses().length > 0) {
+
+                    <select
+                      class="form-select form-select-sm saved-select"
+                      aria-label="Use a saved address"
+                      (change)="useSaved($any($event.target).value)">
+
+                      <option value="">
+                        Use a saved address
+                      </option>
+
+                      @for (a of user.addresses(); track a.id) {
+
+                        <option [value]="a.id">
+                          {{ a.label }} - {{ a.city }}
+                        </option>
+
+                      }
+
+                    </select>
+
+                  } @else {
+
+                    <a
+                      routerLink="/profile"
+                      [queryParams]="{ tab: 'address' }"
+                      class="small fw-bold text-red">
+
+                      Save an address
+
+                    </a>
+
+                  }
+
+                </div>
+
+
+                <textarea
+                  id="co-address"
+                  class="form-control mt-2"
+                  rows="3"
+                  formControlName="address"
+                  autocomplete="street-address"
+                  [class.is-invalid]="f['address'].touched && f['address'].invalid"
+                  placeholder="House no, street, city, pincode">
+                </textarea>
+
+                @if (f['address'].touched && f['address'].invalid) {
+
+                  <p class="field-error">
+                    Please enter a complete address (at least 10 characters).
+                  </p>
+
+                }
+
+              </div>
+
+            </div>
+
+
+            <!-- Place Order Button -->
+            <button
+              type="submit"
+              class="btn-kart btn-glow btn-flip lg block mt-4"
+              [disabled]="busy()">
+
+              <span class="flip">
+
+                <span class="front">
+
+                  @if (busy()) {
+
+                    <span
+                      class="spinner-border spinner-border-sm"
+                      aria-hidden="true">
+                    </span>
+
+                    Placing your order...
+
+                  } @else {
+
+                    <i class="bi bi-bag-check-fill"></i>
+
+                    Place order &middot;
+
+                    {{ checkoutTotal() | currency:'INR':'symbol':'1.0-2' }}
+
+                  }
+
+                </span>
+
+                <span class="back">
+
+                  <i class="bi bi-lightning-charge-fill"></i>
+
+                  {{ busy() ? 'Hang tight' : 'Confirm it' }}
+
+                </span>
+
+              </span>
+
+            </button>
+
+          </form>
+
+        </div>
+
+
+        <!-- Order Summary -->
+        <div class="col-lg-5">
+
+          <aside class="kart-card dark co-summary">
+
+            <div class="d-flex justify-content-between align-items-baseline">
+
+              <h2 class="card-title-kart mb-3">
+                Your items
+              </h2>
+
+              @if (!isDirectCheckout) {
+
+                <a
+                  routerLink="/cart"
+                  class="small fw-bold text-white">
+
+                  Edit cart
+
+                </a>
+
+              } @else {
+
+                <span class="small fw-bold text-white">
+                  Buy now
+                </span>
+
+              }
+
+            </div>
+
+
+            <!-- Product List -->
+            @for (item of checkoutItems(); track item.id + '-' + (item.size ?? '')) {
+
+              <div class="co-item">
+
+                <img
+                  [src]="item.image"
+                  [alt]="item.name">
+
+                <div class="flex-grow-1">
+
+                  <p class="co-name">
+                    {{ item.name }}
+                  </p>
+
+                  <p class="co-meta">
+
+                    @if (item.size) {
+
+                      Size {{ item.size }} &middot;
+
+                    }
+
+                    Qty {{ item.qty }}
+
+                  </p>
+
+                </div>
+
+                <strong>
+
+                  {{ item.price * item.qty | currency:'INR':'symbol':'1.0-2' }}
+
+                </strong>
+
+              </div>
+
+            }
+
+
+            <!-- Order Total -->
+            <div class="co-total">
+
+              <span>Total</span>
+
+              <strong class="glow-text">
+
+                {{ checkoutTotal() | currency:'INR':'symbol':'1.0-2' }}
+
+              </strong>
+
+            </div>
+
+
+            <p class="co-note">
+
+              <i class="bi bi-receipt"></i>
+
+              Each pair is placed as its own order.
+              Your invoice lists them all.
+
+            </p>
+
+          </aside>
+
+        </div>
+
+      </div>
+
+    }
+
+  </div>
+
+</section>

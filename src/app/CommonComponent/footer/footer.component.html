@@ -3,16 +3,53 @@
   <div class="footer-glow" aria-hidden="true"></div>
   <span class="footer-spot" aria-hidden="true"></span>
 
-  <!-- particles form the "SHOEKART" name on this canvas -->
+  <!-- particles form the brand name on this canvas -->
   <canvas #fx class="footer-canvas" aria-hidden="true"></canvas>
 
+  <!-- Scrolling ticker of collections -->
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      @for (t of tickerLoop; track $index) {
+        <span class="tick">{{ t }}</span>
+        <i class="bi bi-gem tick-sep"></i>
+      }
+    </div>
+  </div>
+
   <div class="container footer-inner">
+
+    <!-- Call to action banner -->
+    <div class="foot-cta reveal" style="--d: 0.1s">
+      <div class="cta-text">
+        <p class="cta-kicker"><i class="bi bi-stars"></i> New season</p>
+        <h2 class="cta-title"><span class="shimmer">Luxury, delivered with care.</span></h2>
+        <p class="cta-sub">Discover authenticated watches, handbags, footwear and more before they are gone.</p>
+      </div>
+      <a routerLink="/products" class="cta-btn">
+        <span class="cta-front"><i class="bi bi-gem"></i> Explore collections</span>
+        <span class="cta-back"><i class="bi bi-arrow-right"></i> Enter the boutique</span>
+      </a>
+    </div>
+
+    <!-- Trust strip -->
+    <ul class="footer-trust">
+      @for (t of trust; track t.title) {
+        <li class="trust-item reveal" [style.--d]="(0.2 + $index * 0.1) + 's'">
+          <i [class]="'bi ' + t.icon"></i>
+          <span class="trust-text">
+            <strong>{{ t.title }}</strong>
+            <small>{{ t.sub }}</small>
+          </span>
+        </li>
+      }
+    </ul>
+
     <div class="row gy-5">
 
       <!-- Brand -->
       <div class="col-lg-4 col-md-12">
-        <a routerLink="/" class="kart-logo" aria-label="ShoeKart home">
-          <span class="logo-mark">SK</span>
+        <a routerLink="/" class="kart-logo" [attr.aria-label]="brandName + ' home'">
+          <span class="logo-mark">{{ brandMark }}</span>
           <span class="logo-word" aria-hidden="true">
             @for (c of brandLetters; track $index) {
               <span class="letter" [style.--i]="$index">{{ c }}</span>
@@ -21,23 +58,24 @@
         </a>
 
         <p class="footer-tag reveal" style="--d: 0.35s">
-          Fresh pairs, honest prices. Shoes picked for people who walk fast and stand out.
+          A curated house of luxury, branded and premium pieces. Every item authenticated,
+          every detail considered, for those who expect more.
         </p>
 
         <p class="footer-rotate reveal" style="--d: 0.45s">
-          Made to
+          Made for
           <span class="rotator" aria-hidden="true">
             <span class="rotator-track">
-              <span>walk fast</span>
-              <span>stand out</span>
-              <span>go further</span>
-              <span>look sharp</span>
-              <span>walk fast</span>
+              <span>timeless style</span>
+              <span>true authenticity</span>
+              <span>quiet luxury</span>
+              <span>rare finds</span>
+              <span>timeless style</span>
             </span>
           </span>
         </p>
 
-        <p class="eyebrow footer-eyebrow reveal" style="--d: 0.55s">Follow Us</p>
+        <p class="foot-label reveal" style="--d: 0.55s">Follow us</p>
         <ul class="social-list">
           @for (s of socials; track s.label) {
             <li class="social-item" [style.--i]="$index">
@@ -50,24 +88,40 @@
         </ul>
       </div>
 
-      <!-- Quick links -->
-      <div class="col-lg-4 col-md-6">
-        <h6 class="footer-heading reveal" style="--d: 0.3s">Quick Links</h6>
+      <!-- Collections -->
+      <div class="col-lg-2 col-md-4 col-6">
+        <h6 class="footer-heading reveal" style="--d: 0.3s">Collections</h6>
         <ul class="footer-links">
-          <li class="reveal" style="--d: 0.4s"><a routerLink="/">Home</a></li>
-          <li class="reveal" style="--d: 0.5s"><a routerLink="/about">About</a></li>
-          <li class="reveal" style="--d: 0.6s"><a href="#">Shop</a></li>
-          <li class="reveal" style="--d: 0.7s"><a routerLink="/contact">Contact Us</a></li>
+          @for (c of collections; track c.label) {
+            <li class="reveal" [style.--d]="(0.4 + $index * 0.06) + 's'">
+              <a routerLink="/products" [queryParams]="{ category: c.slug }">{{ c.label }}</a>
+            </li>
+          }
         </ul>
       </div>
 
-      <!-- Contact -->
-      <div class="col-lg-4 col-md-6">
-        <h6 class="footer-heading reveal" style="--d: 0.35s">Contact Info</h6>
+      <!-- Account -->
+      <div class="col-lg-2 col-md-4 col-6">
+        <h6 class="footer-heading reveal" style="--d: 0.35s">Account</h6>
+        <ul class="footer-links">
+          <li class="reveal" style="--d: 0.45s"><a routerLink="/profile">My profile</a></li>
+          <li class="reveal" style="--d: 0.52s"><a routerLink="/orders">Orders</a></li>
+          <li class="reveal" style="--d: 0.59s"><a routerLink="/wishlist">Wishlist</a></li>
+          <li class="reveal" style="--d: 0.66s"><a routerLink="/cart">Cart</a></li>
+          <li class="reveal" style="--d: 0.73s"><a routerLink="/help-center">Help center</a></li>
+        </ul>
+      </div>
+
+      <!-- Concierge -->
+      <div class="col-lg-4 col-md-4">
+        <h6 class="footer-heading reveal" style="--d: 0.4s">Concierge</h6>
         <ul class="footer-links footer-contact">
           <li class="reveal" style="--d: 0.45s"><i class="bi bi-geo-alt-fill"></i> Bhubaneswar, Odisha, India</li>
-          <li class="reveal" style="--d: 0.55s"><i class="bi bi-telephone-fill"></i> +91 98765 43210</li>
-          <li class="reveal" style="--d: 0.65s"><i class="bi bi-envelope-fill"></i> support&#64;shoekart.com</li>
+          <li class="reveal" style="--d: 0.52s"><i class="bi bi-telephone-fill"></i> +91 98765 43210</li>
+          <li class="reveal" style="--d: 0.59s"><i class="bi bi-envelope-fill"></i> concierge&#64;luxekart.com</li>
+          <li class="reveal" style="--d: 0.66s"><i class="bi bi-clock-fill"></i> Mon to Sat, 10am to 8pm IST</li>
+          <li class="reveal" style="--d: 0.73s"><a routerLink="/about"><i class="bi bi-info-circle-fill"></i> About us</a></li>
+          <li class="reveal" style="--d: 0.8s"><a routerLink="/contact"><i class="bi bi-chat-left-text-fill"></i> Contact us</a></li>
         </ul>
       </div>
     </div>
@@ -75,10 +129,23 @@
     <hr class="footer-rule">
 
     <div class="footer-bottom">
-      <p>&copy; {{ year }} ShoeKart. All rights reserved.</p>
-      <p class="footer-made">
-        Crafted with <i class="bi bi-heart-fill"></i> in Bhubaneswar
-      </p>
+      <p class="fb-copy">&copy; {{ year }} {{ brandName }}. All rights reserved.</p>
+
+      <ul class="pay-list" aria-label="Accepted payments">
+        @for (p of payments; track p.label) {
+          <li class="pay-item"><i [class]="'bi ' + p.icon"></i> {{ p.label }}</li>
+        }
+      </ul>
+
+      <div class="fb-right">
+        <p class="footer-made">Crafted with <i class="bi bi-heart-fill"></i> in Bhubaneswar</p>
+        <button type="button" class="to-top" aria-label="Back to top" (click)="scrollTop()">
+          <i class="bi bi-arrow-up"></i>
+        </button>
+      </div>
     </div>
+
+    <!-- room for the particle brand name -->
+    <div #wordspace class="footer-wordspace" aria-hidden="true"></div>
   </div>
 </footer>

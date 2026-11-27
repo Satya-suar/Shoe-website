@@ -1,0 +1,140 @@
+<section class="page-hero">
+  <div class="container">
+    <p class="crumbs"><a routerLink="/">Home</a> / Cart</p>
+    <h1>Your cart</h1>
+    <p>
+      @if (cart.count() > 0) { {{ cart.count() }} {{ cart.count() === 1 ? 'pair' : 'pairs' }} ready to go. }
+      @else { Nothing here yet. }
+    </p>
+  </div>
+</section>
+
+<section class="section-sm">
+  <div class="container">
+
+    @if (cart.items().length === 0) {
+      <div class="empty-state">
+        <span class="empty-ic"><i class="bi bi-bag"></i></span>
+        <h2>Your cart is empty</h2>
+        <p>Add a pair you like and it will wait for you here.</p>
+        <div class="d-flex flex-wrap justify-content-center gap-2">
+          <a routerLink="/products" class="btn-kart btn-glow btn-flip">
+            <span class="flip">
+              <span class="front"><i class="bi bi-bag-check"></i> Start shopping</span>
+              <span class="back"><i class="bi bi-lightning-charge-fill"></i> Let's go</span>
+            </span>
+          </a>
+          @if (wishlist.count() > 0) {
+            <a routerLink="/wishlist" class="btn-kart btn-kart-outline"><i class="bi bi-heart"></i> View wishlist</a>
+          }
+        </div>
+      </div>
+    } @else {
+      <div class="row g-4">
+
+        <!-- Items -->
+        <div class="col-lg-8">
+
+          <div class="kart-card p-3 mb-3">
+            <div class="row g-2 align-items-center">
+              <div class="col-12 col-sm">
+                <div class="search-field">
+                  <i class="bi bi-search"></i>
+                  <input type="search" class="form-control" placeholder="Search your cart" aria-label="Search your cart"
+                    [value]="search()" (input)="search.set($any($event.target).value)" />
+                </div>
+              </div>
+              <div class="col-8 col-sm-auto">
+                <select class="form-select" aria-label="Sort cart" (change)="sortBy.set($any($event.target).value)">
+                  <option value="added" [selected]="sortBy() === 'added'">Order added</option>
+                  <option value="price-asc" [selected]="sortBy() === 'price-asc'">Price: low to high</option>
+                  <option value="price-desc" [selected]="sortBy() === 'price-desc'">Price: high to low</option>
+                  <option value="name" [selected]="sortBy() === 'name'">Name: A to Z</option>
+                </select>
+              </div>
+              <div class="col-4 col-sm-auto">
+                <button type="button" class="btn-kart btn-kart-outline sm w-100" (click)="clearCart()">
+                  <i class="bi bi-trash3"></i> Clear
+                </button>
+              </div>
+            </div>
+          </div>
+
+          @for (item of visible(); track trackLine($index, item); let i = $index) {
+            <article class="kart-card hoverable cart-row mb-3" [style.--i]="i">
+              <div class="row g-3 align-items-center">
+                <div class="col-4 col-sm-3 col-md-2">
+                  <div class="cart-img ratio ratio-1x1">
+                    <img [src]="item.image" [alt]="item.name" loading="lazy">
+                  </div>
+                </div>
+
+                <div class="col-8 col-sm-9 col-md-10">
+                  <div class="row g-2 align-items-center">
+                    <div class="col-md-6">
+                      <h3 class="cart-name">{{ item.name }}</h3>
+                      @if (item.size) { <span class="badge-kart"><i class="bi bi-rulers"></i> Size {{ item.size }}</span> }
+                      <p class="cart-unit mb-0 mt-2">{{ item.price | currency:'INR':'symbol':'1.0-2' }} each</p>
+                    </div>
+
+                    <div class="col-sm-6 col-md-3">
+                      <div class="qty" role="group" [attr.aria-label]="'Quantity of ' + item.name">
+                        <button type="button" aria-label="Decrease quantity" (click)="changeQty(item, -1)">&minus;</button>
+                        <span>{{ item.qty }}</span>
+                        <button type="button" aria-label="Increase quantity" [disabled]="item.qty >= maxQty" (click)="changeQty(item, 1)">+</button>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-6 col-md-3 text-sm-end">
+                      <p class="cart-line">{{ item.price * item.qty | currency:'INR':'symbol':'1.0-2' }}</p>
+                    </div>
+                  </div>
+
+                  <div class="d-flex flex-wrap gap-3 mt-2">
+                    <button type="button" class="row-action" (click)="moveToWishlist(item)"><i class="bi bi-heart"></i> Move to wishlist</button>
+                    <button type="button" class="row-action danger" (click)="remove(item)"><i class="bi bi-trash3"></i> Remove</button>
+                  </div>
+                </div>
+              </div>
+            </article>
+          } @empty {
+            <div class="empty-state my-3">
+              <span class="empty-ic"><i class="bi bi-search"></i></span>
+              <h3>No items match</h3>
+              <p>Nothing in your cart matches "{{ search() }}".</p>
+              <button type="button" class="btn-kart btn-kart-outline sm" (click)="search.set('')">Clear search</button>
+            </div>
+          }
+
+          <a routerLink="/products" class="link-arrow mt-2"><i class="bi bi-arrow-left"></i> Continue shopping</a>
+        </div>
+
+        <!-- Summary -->
+        <div class="col-lg-4">
+          <aside class="kart-card dark summary-card">
+            <h2 class="summary-title">Order summary</h2>
+
+            <dl class="summary-list">
+              <div><dt>Items</dt><dd>{{ cart.count() }}</dd></div>
+              <div><dt>Subtotal</dt><dd>{{ cart.total() | currency:'INR':'symbol':'1.0-2' }}</dd></div>
+            </dl>
+
+            <div class="summary-total">
+              <span>Total</span>
+              <strong class="glow-text">{{ cart.total() | currency:'INR':'symbol':'1.0-2' }}</strong>
+            </div>
+
+            <a routerLink="/checkout" class="btn-kart btn-glow btn-flip lg block mt-3">
+              <span class="flip">
+                <span class="front"><i class="bi bi-lock-fill"></i> Proceed to checkout</span>
+                <span class="back"><i class="bi bi-arrow-right-circle-fill"></i> Let's go</span>
+              </span>
+            </a>
+
+            <p class="summary-note"><i class="bi bi-receipt"></i> You get an invoice copy once your order is placed.</p>
+          </aside>
+        </div>
+      </div>
+    }
+  </div>
+</section>

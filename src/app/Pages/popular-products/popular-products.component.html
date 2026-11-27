@@ -2,22 +2,28 @@
   <div class="container">
     <div class="section-head">
       <div>
-        <p class="eyebrow">Flying Off the Shelf</p>
-        <h2 class="section-title">Popular Products</h2>
+        <p class="eyebrow">Flying off the shelf</p>
+        <h2 class="section-title">Popular products</h2>
       </div>
-      
+      <a routerLink="/products" class="link-arrow">Shop all shoes <i class="bi bi-arrow-right"></i></a>
     </div>
 
-    <div *ngIf="isLoading" class="loader-row">
-      <div class="dot-spinner"></div>
-    </div>
-
-    <div *ngIf="!isLoading && productList.length === 0" class="empty-state">
-      No popular products yet. Please check back soon.
-    </div>
-
-    <div *ngIf="!isLoading && productList.length > 0" class="product-grid">
-      <app-card *ngFor="let product of productList" [product]="product"></app-card>
-    </div>
+    @if (isLoading) {
+      <div class="loader-row"><div class="dot-spinner"></div></div>
+    } @else if (productList.length === 0) {
+      <div class="empty-state">
+        <span class="empty-ic"><i class="bi bi-fire"></i></span>
+        <h3>No popular picks yet</h3>
+        <p>Please check back soon.</p>
+      </div>
+    } @else {
+      <div class="row g-4">
+        @for (product of productList; track product.productId; let i = $index) {
+          <div class="col-12 col-sm-6 col-lg-3" appReveal [revealDelay]="(i % 4) * 100">
+            <app-card [product]="product"></app-card>
+          </div>
+        }
+      </div>
+    }
   </div>
 </section>

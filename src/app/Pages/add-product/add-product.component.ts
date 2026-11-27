@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { MyServiceService } from '../../Common-Service/my-service.service';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-add-product',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './add-product.component.html',
   styleUrl: './add-product.component.css'
 })
@@ -15,6 +16,7 @@ export class AddProductComponent {
   productForm!: FormGroup;
   imagePreview: string | null = null;
 selectedFile: File | null = null;
+imageError = false;
 brands: any[] = [];
 
   constructor(private myService: MyServiceService,private fb: FormBuilder) {
@@ -82,6 +84,7 @@ onFileSelected(event: any): void {
   }
 
   this.selectedFile = file;
+  this.imageError = false;
 
   const reader = new FileReader();
 
@@ -98,6 +101,11 @@ onFileSelected(event: any): void {
 
     this.productForm.markAllAsTouched();
 
+    return;
+  }
+
+  if (!this.selectedFile) {
+    this.imageError = true;
     return;
   }
 
@@ -159,7 +167,7 @@ onFileSelected(event: any): void {
         icon: 'success',
         title: 'Product Added!',
         text: res.message || 'Your product has been added successfully.',
-        confirmButtonColor: '#16181d'
+        confirmButtonColor: '#e10b1f'
       });
      this.productForm.reset({
   isStock: true,
@@ -175,7 +183,7 @@ this.imagePreview = null;
         icon: 'error',
         title: 'Product Failed',
         text: err?.error?.message || 'Something went wrong. Please try again.',
-        confirmButtonColor: '#16181d'
+        confirmButtonColor: '#e10b1f'
       });
     }
   });

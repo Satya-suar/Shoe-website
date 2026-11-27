@@ -1,57 +1,137 @@
-<section class="section orders-section">
+<section class="page-hero">
+  <div class="container">
+    <p class="crumbs"><a routerLink="/">Home</a> / My orders</p>
+    <div class="row align-items-end g-3">
+      <div class="col-lg-7">
+        <h1>Order history</h1>
+        <p>Every piece you have ordered, with an invoice copy for each.</p>
+      </div>
+      @if (orders().length > 0) {
+        <div class="col-lg-5">
+          <div class="row g-2 text-center">
+            <div class="col-6"><div class="stat-pill"><strong>{{ orders().length }}</strong><span>Orders</span></div></div>
+            <div class="col-6"><div class="stat-pill"><strong>{{ totalSpent() | currency:'INR':'symbol':'1.0-0' }}</strong><span>Total spent</span></div></div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="section-sm">
   <div class="container">
 
-    <div class="section-head">
-      <div>
-        <p class="eyebrow">Order History</p>
-        <h2 class="section-title">My Orders</h2>
+    @if (isLoading()) {
+      <div class="loader-row"><div class="dot-spinner"></div></div>
+    } @else if (loadFailed()) {
+      <div class="empty-state">
+        <span class="empty-ic"><i class="bi bi-wifi-off"></i></span>
+        <h2>We couldn't load your orders</h2>
+        <p>Check your connection and try again.</p>
+        <button type="button" class="btn-kart" (click)="ngOnInit()">Try again</button>
       </div>
-      <span class="order-count" *ngIf="!isLoading && orderList.length > 0">
-        {{ orderList.length }} {{ orderList.length === 1 ? 'order' : 'orders' }}
-      </span>
-    </div>
+    } @else if (orders().length === 0) {
+      <div class="empty-state">
+        <span class="empty-ic"><i class="bi bi-box2"></i></span>
+        <h2>No orders yet</h2>
+        <p>Once you place an order it shows up here.</p>
+        <a routerLink="/products" class="btn-kart btn-glow">Start shopping</a>
+      </div>
+    } @else {
 
-    <div *ngIf="isLoading" class="loader-row">
-      <div class="dot-spinner"></div>
-    </div>
-
-    <div *ngIf="!isLoading && orderList.length === 0" class="empty-state">
-      <p>No orders placed yet.</p>
-      <a routerLink="/shop" class="btn-outline-ink">Start Shopping</a>
-    </div>
-
-    <div *ngIf="!isLoading && orderList.length > 0" class="order-list">
-      <article class="order-row" *ngFor="let order of orderList">
-
-        <div class="order-thumb">
-          <img [src]="imageUrl + order.productImage" [alt]="order.productName" class="order-img">
-        </div>
-
-        <div class="order-info">
-          <div class="order-top">
-            <p class="order-brand">{{ order.brandName }}</p>
-            <span class="order-date">
-              <i class="bi bi-calendar-event"></i>
-              {{ order.orderDate | date:'dd MMM yyyy' }}
-            </span>
+      <!-- Search + filters -->
+      <div class="filter-bar">
+        <div class="row g-2 align-items-center">
+          <div class="col-12 col-lg">
+            <div class="search-field">
+              <i class="bi bi-search"></i>
+              <input type="search" class="form-control" placeholder="Search by product, brand or name" aria-label="Search orders"
+                [value]="search()" (input)="search.set($any($event.target).value)" />
+            </div>
           </div>
-
-          <h3 class="order-name">{{ order.productName }}</h3>
-
-          <div class="order-details">
-            <p class="order-customer"><i class="bi bi-person"></i>{{ order.customerName }}</p>
-            <p class="order-mobile"><i class="bi bi-telephone"></i>{{ order.mobileNumber }}</p>
-            <p class="order-email"><i class="bi bi-envelope"></i>{{ order.email }}</p>
-            <p class="order-address"><i class="bi bi-geo-alt"></i>{{ order.address }}</p>
+          <div class="col-6 col-lg-auto">
+            <select class="form-select" aria-label="Date range" (change)="range.set($any($event.target).value)">
+              @for (r of ranges; track r.value) {
+                <option [value]="r.value" [selected]="range() === r.value">{{ r.label }}</option>
+              }
+            </select>
+          </div>
+          <div class="col-6 col-lg-auto">
+            <select class="form-select" aria-label="Sort orders" (change)="sortBy.set($any($event.target).value)">
+              <option value="newest" [selected]="sortBy() === 'newest'">Newest first</option>
+              <option value="oldest" [selected]="sortBy() === 'oldest'">Oldest first</option>
+              <option value="price-desc" [selected]="sortBy() === 'price-desc'">Price: high to low</option>
+              <option value="price-asc" [selected]="sortBy() === 'price-asc'">Price: low to high</option>
+            </select>
           </div>
         </div>
 
-        <div class="order-price">
-          <span class="price-label">Total</span>
-          <span class="price-value">₹{{ order.productPrice }}</span>
-        </div>
+        @if (brands().length > 1) {
+          <div class="f-chips" role="group" aria-label="Filter by brand">
+            <button type="button" class="f-chip" [class.active]="brand() === ''" (click)="brand.set('')">All brands</button>
+            @for (b of brands(); track b) {
+              <button type="button" class="f-chip" [class.active]="brand() === b" (click)="brand.set(brand() === b ? '' : b)">{{ b }}</button>
+            }
+          </div>
+        }
 
-      </article>
-    </div>
+        <p class="f-count" aria-live="polite">
+          Showing <strong>{{ visible().length }}</strong> of {{ orders().length }} {{ orders().length === 1 ? 'order' : 'orders' }}
+          @if (filtersActive()) { &middot; <button type="button" class="link-btn" (click)="resetFilters()">Clear filters</button> }
+        </p>
+      </div>
+
+      <!-- Orders -->
+      @for (order of visible(); track $index; let i = $index) {
+        <article class="order-card" appReveal [revealDelay]="(i % 4) * 60">
+
+          <div class="oc-media">
+            <img [src]="imageUrl + order.productImage" [alt]="order.productName" loading="lazy">
+            <span class="oc-brand"><i class="bi bi-gem"></i> {{ order.brandName }}</span>
+          </div>
+
+          <div class="oc-body">
+            <span class="oc-status"><i class="bi bi-check2-circle"></i> Order placed</span>
+            <h3 class="oc-name">{{ order.productName }}</h3>
+
+            <div class="oc-when">
+              <div class="oc-date">
+                <b>{{ order.orderDate | date:'dd' }}</b>
+                <span>{{ order.orderDate | date:'MMM yyyy' }}</span>
+              </div>
+              <div class="oc-time">
+                <small>Placed at</small>
+                <strong><i class="bi bi-clock"></i> {{ order.orderDate | date:'h:mm a' }}</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="oc-stub">
+            <span class="oc-stub-label">Amount</span>
+            <p class="oc-price">{{ order.productPrice | currency:'INR':'symbol':'1.0-2' }}</p>
+            <button type="button" class="btn-kart btn-kart-dark btn-flip sm" (click)="openInvoice(order)">
+              <span class="flip">
+                <span class="front"><i class="bi bi-receipt"></i> Invoice copy</span>
+                <span class="back"><i class="bi bi-printer"></i> Open it</span>
+              </span>
+            </button>
+          </div>
+
+          <div class="oc-ship">
+            <span class="oc-ship-title"><i class="bi bi-truck"></i> Delivering to</span>
+            <span class="oc-ship-item"><i class="bi bi-person"></i> {{ order.customerName }}</span>
+            <span class="oc-ship-item"><i class="bi bi-telephone"></i> {{ order.mobileNumber }}</span>
+            <span class="oc-ship-item oc-addr"><i class="bi bi-geo-alt"></i> {{ order.address }}</span>
+          </div>
+        </article>
+      } @empty {
+        <div class="empty-state">
+          <span class="empty-ic"><i class="bi bi-search"></i></span>
+          <h3>No orders match</h3>
+          <p>Try a different search or clear the filters.</p>
+          <button type="button" class="btn-kart btn-kart-outline sm" (click)="resetFilters()">Clear filters</button>
+        </div>
+      }
+    }
   </div>
 </section>

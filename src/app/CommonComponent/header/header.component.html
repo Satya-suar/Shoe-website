@@ -4,8 +4,8 @@
   <div class="container nav-inner">
 
     <!-- Logo -->
-    <a class="navbar-brand kart-logo order-1" routerLink="/" aria-label="ShoeKart home" (click)="closeAll()">
-      <span class="logo-mark">SK</span>
+    <a class="navbar-brand kart-logo order-1" routerLink="/" aria-label="LuxeKart home" (click)="closeAll()">
+      <span class="logo-mark">LK</span>
       <span class="logo-text" aria-hidden="true">
         @for (c of letters; track $index) {
           <span class="lt" [style.--i]="$index">{{ c }}</span>
@@ -45,6 +45,9 @@
         @if (settingsOpen()) {
           <div class="dd-menu" role="menu">
             <p class="dd-title">Settings</p>
+            <a class="dd-item" role="menuitem" routerLink="/settings" routerLinkActive="active" (click)="closeAll()">
+              <span class="dd-ic"><i class="bi bi-sliders"></i></span> All settings
+            </a>
             <a class="dd-item" role="menuitem" routerLink="/profile" [queryParams]="{ tab: 'address' }" (click)="closeAll()">
               <span class="dd-ic"><i class="bi bi-geo-alt"></i></span> Address
             </a>
@@ -65,92 +68,111 @@
         }
       </div>
 
-      <!-- Profile dropdown -->
-      <div class="dd-wrap">
-        <button type="button" class="profile-btn" aria-label="Open profile menu" aria-haspopup="menu"
-          [attr.aria-expanded]="profileOpen()" (click)="toggleProfile()">
-          @if (user.profile().image) {
-            <img class="avatar" [src]="user.profile().image" alt="" />
-          } @else {
-            <span class="avatar avatar-fallback">{{ user.initial() }}</span>
-          }
-          <span class="profile-name d-none d-md-inline">{{ user.profile().name }}</span>
-          <i class="bi bi-chevron-down d-none d-md-inline profile-caret"></i>
-        </button>
+      @if (auth.isLoggedIn()) {
+        <!-- Profile dropdown (signed in) -->
+        <div class="dd-wrap">
+          <button type="button" class="profile-btn" aria-label="Open profile menu" aria-haspopup="menu"
+            [attr.aria-expanded]="profileOpen()" (click)="toggleProfile()">
+            @if (user.profile().image) {
+              <img class="avatar" [src]="user.profile().image" alt="" />
+            } @else {
+              <span class="avatar avatar-fallback">{{ initial() }}</span>
+            }
+            <span class="profile-name d-none d-md-inline">{{ displayName() }}</span>
+            <i class="bi bi-chevron-down d-none d-md-inline profile-caret"></i>
+          </button>
 
-        @if (profileOpen()) {
-          <div class="dd-menu" role="menu">
-            <div class="dd-profile">
-              @if (user.profile().image) {
-                <img class="avatar avatar-lg" [src]="user.profile().image" alt="" />
-              } @else {
-                <span class="avatar avatar-lg avatar-fallback">{{ user.initial() }}</span>
-              }
-              <div class="dd-profile-text">
-                <span class="dd-greeting">{{ greeting() }}</span>
-                <strong>{{ user.profile().name }}</strong>
-                <small>{{ user.profile().email || 'ShoeKart member' }}</small>
+          @if (profileOpen()) {
+            <div class="dd-menu" role="menu">
+              <div class="dd-profile">
+                @if (user.profile().image) {
+                  <img class="avatar avatar-lg" [src]="user.profile().image" alt="" />
+                } @else {
+                  <span class="avatar avatar-lg avatar-fallback">{{ initial() }}</span>
+                }
+                <div class="dd-profile-text">
+                  <span class="dd-greeting">{{ greeting() }}</span>
+                  <strong>{{ displayName() }}</strong>
+                  <small>{{ displayEmail() || 'LuxeKart member' }}</small>
+                </div>
               </div>
+
+              <div class="dd-divider"></div>
+
+              <a class="dd-item" role="menuitem" routerLink="/profile" (click)="closeAll()">
+                <span class="dd-ic"><i class="bi bi-person"></i></span> My Profile
+              </a>
+              <a class="dd-item" role="menuitem" routerLink="/profile" [queryParams]="{ edit: 1 }" (click)="closeAll()">
+                <span class="dd-ic"><i class="bi bi-pencil-square"></i></span> Edit Profile
+              </a>
+              <a class="dd-item" role="menuitem" routerLink="/orders" (click)="closeAll()">
+                <span class="dd-ic"><i class="bi bi-box2"></i></span> My Orders
+              </a>
+              <a class="dd-item" role="menuitem" routerLink="/wishlist" (click)="closeAll()">
+                <span class="dd-ic"><i class="bi bi-heart"></i></span> Wishlist
+                @if (wishlist.count() > 0) {
+                  <span class="dd-pill">{{ wishlist.count() }}</span>
+                }
+              </a>
+
+              <div class="dd-divider"></div>
+
+              <a class="dd-item dd-out" role="menuitem" routerLink="/logout" (click)="closeAll()">
+                <span class="dd-ic"><i class="bi bi-box-arrow-right"></i></span> Sign out
+              </a>
             </div>
-
-            <div class="dd-divider"></div>
-
-            <a class="dd-item" role="menuitem" routerLink="/profile" (click)="closeAll()">
-              <span class="dd-ic"><i class="bi bi-person"></i></span> My Profile
-            </a>
-            <a class="dd-item" role="menuitem" routerLink="/profile" [queryParams]="{ edit: 1 }" (click)="closeAll()">
-              <span class="dd-ic"><i class="bi bi-pencil-square"></i></span> Edit Profile
-            </a>
-            <a class="dd-item" role="menuitem" routerLink="/orders" (click)="closeAll()">
-              <span class="dd-ic"><i class="bi bi-box2"></i></span> My Orders
-            </a>
-            <a class="dd-item" role="menuitem" routerLink="/wishlist" (click)="closeAll()">
-              <span class="dd-ic"><i class="bi bi-heart"></i></span> Wishlist
-              @if (wishlist.count() > 0) {
-                <span class="dd-pill">{{ wishlist.count() }}</span>
-              }
-            </a>
-          </div>
-        }
-      </div>
+          }
+        </div>
+      } @else {
+        <a routerLink="/login" class="signin-btn" (click)="closeAll()">
+          <i class="bi bi-person"></i> <span>Sign in</span>
+        </a>
+      }
     </div>
 
-    <!-- Mobile menu button -->
-    <button class="navbar-toggler order-3 ms-2" type="button" aria-label="Toggle navigation"
-      [attr.aria-expanded]="menuOpen()" (click)="toggleMenu()">
-      <span class="navbar-toggler-icon"></span>
+    <!-- Mobile menu button: three lines that morph into a close (X) -->
+    <button class="burger d-lg-none order-3 ms-2" type="button"
+      [class.open]="menuOpen()" [attr.aria-expanded]="menuOpen()" aria-controls="mainNav"
+      [attr.aria-label]="menuOpen() ? 'Close menu' : 'Open menu'" (click)="toggleMenu()">
+      <span class="burger-box" aria-hidden="true">
+        <span class="bl bl-1"></span>
+        <span class="bl bl-2"></span>
+        <span class="bl bl-3"></span>
+      </span>
     </button>
 
-    <!-- Main links (centered on desktop) -->
-    <div class="collapse navbar-collapse order-4 order-lg-2" id="mainNav" [class.show]="menuOpen()">
-      <ul class="navbar-nav mx-lg-auto mb-2 mb-lg-0 align-items-lg-center">
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/" routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }" (click)="closeAll()">
-            <i class="bi bi-house"></i> <span>Home</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/products" routerLinkActive="active" (click)="closeAll()">
-            <i class="bi bi-bag-check"></i> <span>Shop</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/brands" routerLinkActive="active" (click)="closeAll()">
-            <i class="bi bi-tags"></i> <span>Brands</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/" fragment="about" (click)="closeAll()">
-            <i class="bi bi-info-circle"></i> <span>About</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/" fragment="contact" (click)="closeAll()">
-            <i class="bi bi-headset"></i> <span>Contact Us</span>
-          </a>
-        </li>
-      </ul>
+    <!-- Main links (centered on desktop, sliding drawer on phones/tablets) -->
+    <div class="navbar-collapse nav-drawer order-4 order-lg-2" id="mainNav" [class.show]="menuOpen()">
+      <div class="nav-drawer-inner">
+        <ul class="navbar-nav mx-lg-auto mb-2 mb-lg-0 align-items-lg-center">
+          <li class="nav-item" style="--n: 0">
+            <a class="nav-link" routerLink="/" routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }" (click)="closeAll()">
+              <i class="bi bi-house"></i> <span>Home</span>
+            </a>
+          </li>
+          <li class="nav-item" style="--n: 1">
+            <a class="nav-link" routerLink="/products" routerLinkActive="active" (click)="closeAll()">
+              <i class="bi bi-gem"></i> <span>Collections</span>
+            </a>
+          </li>
+          <li class="nav-item" style="--n: 2">
+            <a class="nav-link" routerLink="/brands" routerLinkActive="active" (click)="closeAll()">
+              <i class="bi bi-award"></i> <span>Brands</span>
+            </a>
+          </li>
+          <li class="nav-item" style="--n: 3">
+            <a class="nav-link" routerLink="/about" routerLinkActive="active" (click)="closeAll()">
+              <i class="bi bi-info-circle"></i> <span>About</span>
+            </a>
+          </li>
+          <li class="nav-item" style="--n: 4">
+            <a class="nav-link" routerLink="/contact" routerLinkActive="active" (click)="closeAll()">
+              <i class="bi bi-headset"></i> <span>Concierge</span>
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 
@@ -160,7 +182,7 @@
       <form class="search-form" (ngSubmit)="submitSearch()">
         <i class="bi bi-search"></i>
         <input #searchInput type="search" name="q" [(ngModel)]="query"
-          placeholder="Search shoes, brands or colors" autocomplete="off" aria-label="Search products" />
+          placeholder="Search watches, handbags, fragrances or brands" autocomplete="off" aria-label="Search products" />
         <button type="submit" class="search-go">Search</button>
       </form>
 
@@ -197,6 +219,9 @@
   <span class="nav-progress" aria-hidden="true" [style.width.%]="progress()"></span>
 </nav>
 
+<!-- Dim backdrop behind the mobile menu (tap it to close) -->
+<div class="nav-backdrop" [class.show]="menuOpen()" (click)="closeAll()" aria-hidden="true"></div>
+
 <!-- Notification strip: sits BELOW the navbar, outside it, and scrolls away with the page -->
 @if (announceOpen()) {
   <div class="announce" role="region" aria-label="Store announcements">
@@ -205,5 +230,6 @@
         <span class="ann-msg"><i [class]="'bi ' + m.icon"></i> {{ m.text }}</span>
       }
     </div>
+    
   </div>
 }

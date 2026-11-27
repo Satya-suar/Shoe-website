@@ -1,35 +1,70 @@
 <section class="hero">
-  <div class="container hero-grid">
-    <div class="hero-copy">
-      <p class="eyebrow">New Season Drop</p>
-      <h1 class="hero-title">Step Into<br>Something<br><span class="highlight">Faster.</span></h1>
-      <p class="hero-sub">Handpicked sneakers from the brands you trust, at prices that make sense. No filler, no fuss &mdash; just good shoes.</p>
-      <div class="hero-actions">
-        <a routerLink="/shop" class="btn-volt">Shop by Brand</a>
-        <a href="#popular" class="btn-outline-ink">See Popular Picks</a>
+  <div class="hero-glow g1" aria-hidden="true"></div>
+  <div class="hero-glow g2" aria-hidden="true"></div>
+
+  <div class="container position-relative">
+    <div class="row align-items-center gy-5">
+
+      <!-- Copy -->
+      <div class="col-lg-6">
+        <p class="eyebrow">New season drop</p>
+
+        <h1 class="hero-title">
+          <span class="line l1">Step into</span>
+          <span class="line l2">something</span>
+          <span class="line l3 highlight">faster.</span>
+        </h1>
+
+        <p class="hero-sub">
+          Handpicked sneakers from the brands you trust, at prices that make sense. No filler, no fuss &mdash; just good shoes.
+        </p>
+
+        <div class="d-flex flex-wrap gap-3 hero-actions">
+          <a routerLink="/brands" class="btn-red">
+            <i class="bi bi-tags-fill"></i> Shop by brand
+          </a>
+          <a routerLink="/" fragment="popular" class="btn-line">
+            See popular picks <i class="bi bi-arrow-down-circle"></i>
+          </a>
+        </div>
+
+        <ul class="hero-points row g-3 list-unstyled">
+          <li class="col-12 col-sm-4"><i class="bi bi-patch-check-fill"></i> Handpicked brands</li>
+          <li class="col-12 col-sm-4"><i class="bi bi-tag-fill"></i> Honest prices</li>
+          <li class="col-12 col-sm-4"><i class="bi bi-box-seam-fill"></i> Fresh stock weekly</li>
+        </ul>
       </div>
+
+      <!-- Art -->
+      <div class="col-lg-6">
+        <div class="hero-art" aria-hidden="true">
+          <div class="glow-ring"></div>
+          <div class="spin-ring"></div>
+          <span class="floating-dot d1"></span>
+          <span class="floating-dot d2"></span>
+          <span class="floating-dot d3"></span>
+
+          <img class="hero-shoe"
+            src="https://png.pngtree.com/png-vector/20250624/ourmid/pngtree-a-high-quality-sports-shoes-png-image_16585846.png"
+            alt="Sneaker">
+
+          <div class="tag-chip"><span class="tag-dot"></span> Fresh stock weekly</div>
+        </div>
+      </div>
+
     </div>
-
-    <div class="hero-art" aria-hidden="true">
-    <div class="glow-ring"></div>
-
-    <div class="art-blob"></div>
-
-    <span class="floating-circle circle-1"></span>
-    <span class="floating-circle circle-2"></span>
-    <span class="floating-circle circle-3"></span>
-
-    <img
-      src="https://png.pngtree.com/png-vector/20250624/ourmid/pngtree-a-high-quality-sports-shoes-png-image_16585846.png"
-      alt="Sneaker"
-      class="hero-shoe"
-    />
-
-    <div class="tag-chip">
-        <span class="tag-dot"></span>
-        Fresh Stock Weekly
-    </div>
-</div>
   </div>
 </section>
-<div class="speed-divider"></div>
+
+<!-- Scrolling strip -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    @for (group of [1, 2]; track group) {
+      <span>New season drop</span>
+      <span>Handpicked sneakers</span>
+      <span>Honest prices</span>
+      <span>Fresh stock weekly</span>
+      <span>Walk fast, stand out</span>
+    }
+  </div>
+</div>

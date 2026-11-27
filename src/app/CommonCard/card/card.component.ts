@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { MyServiceService } from '../../Common-Service/my-service.service';
 import { CartService } from '../../Common-Service/cart.service';
 import { WishlistService } from '../../Common-Service/wishlist.service';
+import { ToastService } from '../../Common-Service/toast.service';
 
 @Component({
   selector: 'app-card',
@@ -20,6 +21,7 @@ export class CardComponent {
 
   cart = inject(CartService);
   wishlist = inject(WishlistService);
+  private toast = inject(ToastService);
 
   // true for a moment after "Add to cart" so the button can confirm
   added = signal(false);
@@ -29,12 +31,16 @@ export class CardComponent {
   }
 
   toggleWishlist(): void {
+    const wasSaved = this.wishlist.has(this.product.productId);
+
     this.wishlist.toggle({
       id: this.product.productId,
       name: this.product.productName,
       price: Number(this.product.price),
       image: this.imageUrl + this.product.productImage
     });
+
+    this.toast.show(wasSaved ? 'Removed from wishlist' : 'Saved to wishlist', wasSaved ? 'info' : 'success', 'bi-heart-fill');
   }
 
   addToCart(): void {
@@ -48,6 +54,7 @@ export class CardComponent {
       size: this.product.size != null ? String(this.product.size) : undefined
     });
 
+    this.toast.show(`${this.product.productName} added to cart`, 'success', 'bi-bag-check-fill');
     this.added.set(true);
     setTimeout(() => this.added.set(false), 1500);
   }

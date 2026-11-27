@@ -1,46 +1,57 @@
-<article class="shoe-card">
+<article class="card shoe-card h-100">
+
+  <!-- small image -->
   <div class="shoe-card-img">
-    <a class="img-link" [routerLink]="['/products', product.productId]"
-      [attr.aria-label]="'View ' + product.productName">
-      <img [src]="imageUrl + product.productImage" [alt]="product.productName" loading="lazy">
-    </a>
+    <div class="ratio ratio-4x3">
+      <a [routerLink]="['/products', product.productId]">
+        <img [src]="imageUrl + product.productImage" [alt]="product.productName" loading="lazy">
+      </a>
+    </div>
 
     <span class="stock-chip" [class.out]="!product.isStock">
-      {{ product.isStock ? 'Available' : 'Out of stock' }}
+      <span class="stock-dot"></span>
+      {{ product.isStock ? 'In stock' : 'Sold out' }}
     </span>
 
     <button type="button" class="wish-btn" [class.active]="wishlist.has(product.productId)"
-      [attr.aria-pressed]="wishlist.has(product.productId)"
-      [attr.aria-label]="wishlist.has(product.productId) ? 'Remove from wishlist' : 'Add to wishlist'"
-      (click)="toggleWishlist()">
-      <i class="bi" [class.bi-heart]="!wishlist.has(product.productId)" [class.bi-heart-fill]="wishlist.has(product.productId)"></i>
+      aria-label="Wishlist" (click)="toggleWishlist()">
+      <i class="bi" [class.bi-heart]="!wishlist.has(product.productId)"
+        [class.bi-heart-fill]="wishlist.has(product.productId)"></i>
     </button>
   </div>
 
-  <div class="shoe-card-body">
+  <div class="card-body d-flex flex-column">
     <p class="shoe-brand">{{ product.brandName }}</p>
     <h3 class="shoe-name">
       <a [routerLink]="['/products', product.productId]">{{ product.productName }}</a>
     </h3>
 
-    <div class="shoe-meta">
-      <span>Size {{ product.size }}</span>
-      <span class="dot">&bull;</span>
-      <span>{{ product.color }}</span>
+    <!-- size badge + colour icon badge -->
+    <div class="d-flex flex-wrap gap-2 mb-3">
+      <span class="tag"><i class="bi bi-rulers"></i> {{ product.size }}</span>
+      <span class="tag tag-icon" [title]="product.color" [attr.aria-label]="'Color: ' + product.color">
+        <i class="bi bi-palette-fill"></i>
+      </span>
     </div>
 
-    <p class="shoe-price">{{ product.price | currency:'INR' }}</p>
+    <!-- price + buttons -->
+    <div class="mt-auto">
+      <p class="shoe-price">{{ product.price | currency:'INR':'symbol':'1.0-2' }}</p>
 
-    <div class="shoe-actions">
-      <button type="button" class="btn-cart" [class.added]="added()" [disabled]="!product.isStock" (click)="addToCart()">
-        <i class="bi" [class.bi-bag-plus]="!added()" [class.bi-check2]="added()"></i>
-        {{ !product.isStock ? 'Out of stock' : added() ? 'Added' : 'Add to cart' }}
-      </button>
-
-      <a class="btn-details" [routerLink]="['/products', product.productId]"
-        [attr.aria-label]="'View details of ' + product.productName">
-        <i class="bi bi-eye"></i>
-      </a>
+      <div class="row g-2 flex-nowrap">
+        <div class="col">
+          <button type="button" class="btn-cart w-100" [class.added]="added()"
+            [disabled]="!product.isStock" (click)="addToCart()">
+            <i class="bi" [class.bi-bag-plus]="!added()" [class.bi-check2]="added()"></i>
+            {{ !product.isStock ? 'Out of stock' : added() ? 'Added' : 'Add to cart' }}
+          </button>
+        </div>
+        <div class="col-auto">
+          <a class="btn-eye" [routerLink]="['/products', product.productId]" aria-label="View details">
+            <i class="bi bi-eye"></i>
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 </article>

@@ -11,11 +11,12 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthService } from '../../Common-Service/auth.service';
 import { CartService } from '../../Common-Service/cart.service';
 import { ProfileService } from '../../Common-Service/profile.service';
 import { WishlistService } from '../../Common-Service/wishlist.service';
 
-const RECENT_KEY = 'shoekart_recent_searches';
+const RECENT_KEY = 'luxekart_recent_searches';
 
 @Component({
   selector: 'app-header',
@@ -27,6 +28,12 @@ export class HeaderComponent {
   cart = inject(CartService);
   wishlist = inject(WishlistService);
   user = inject(ProfileService);
+  auth = inject(AuthService);
+
+  // name / email / initial: use the signed-in account first, fall back to the saved profile
+  displayName = computed(() => this.auth.user()?.name || this.user.profile().name || 'Member');
+  displayEmail = computed(() => this.auth.user()?.email || this.user.profile().email || '');
+  initial = computed(() => (this.displayName().trim().charAt(0) || 'L').toUpperCase());
 
   private router = inject(Router);
   private host = inject(ElementRef<HTMLElement>);
@@ -47,19 +54,20 @@ export class HeaderComponent {
   // ---------- announcement strip (edit these messages) ----------
   announceOpen = signal(true);
   announcements = [
-    { icon: 'bi-stars', text: 'New arrivals every week' },
-    { icon: 'bi-truck', text: 'Fast delivery across India' },
-    { icon: 'bi-arrow-repeat', text: 'Easy returns on every pair' },
+    { icon: 'bi-patch-check-fill', text: '100% authenticated luxury' },
+    { icon: 'bi-truck', text: 'Complimentary insured delivery on premium orders' },
+    { icon: 'bi-stars', text: 'New season arrivals have landed' },
+    { icon: 'bi-arrow-repeat', text: '7-day easy returns' },
   ];
   announceIndex = signal(0);
   currentAnnouncement = computed(() => [this.announcements[this.announceIndex()]]);
 
   // ---------- logo letters ----------
-  letters = 'ShoeKart'.split('');
+  letters = 'LuxeKart'.split('');
 
   // ---------- search ----------
   query = '';
-  popular = ['Sneakers', 'Running', 'Sports', 'Casual', 'Formal', 'Sandals'];
+  popular = ['Watches', 'Handbags', 'Gucci', 'Rolex', 'Perfumes', 'Sunglasses'];
   recent = signal<string[]>(this.loadRecent());
 
   // ---------- badge bump animation ----------
@@ -142,11 +150,11 @@ export class HeaderComponent {
     const q = this.query.trim();
     if (!q) return;
     this.saveRecent(q);
-    // your nav "Shop" link goes to /products, so search goes there too
     this.router.navigate(['/products'], { queryParams: { q } });
     this.closeAll();
   }
 
+  // used by the "Recent" and "Popular" chips
   searchFor(term: string): void {
     this.query = term;
     this.submitSearch();
@@ -181,7 +189,7 @@ export class HeaderComponent {
     }
   }
 
-  // ---------- small helpers ----------
+  // ---------- greeting (shown in the profile menu) ----------
   greeting(): string {
     const h = new Date().getHours();
     if (h < 12) return 'Good morning';
@@ -189,9 +197,13 @@ export class HeaderComponent {
     return 'Good evening';
   }
 
+  // ---------- small helpers ----------
   private pulse(flag: ReturnType<typeof signal<boolean>>): void {
-    flag.set(true);
-    setTimeout(() => flag.set(false), 600);
+    // deferred so the signal is never written inside the effect itself
+    setTimeout(() => {
+      flag.set(true);
+      setTimeout(() => flag.set(false), 600);
+    });
   }
 
   // ---------- listeners ----------
@@ -212,6 +224,12 @@ export class HeaderComponent {
       this.hidden.set(false);
     }
     this.lastY = y;
+  }
+
+  // If the window grows to desktop size, make sure the mobile menu is not left open.
+  @HostListener('window:resize')
+  onResize(): void {
+    if (window.innerWidth >= 992 && this.menuOpen()) this.menuOpen.set(false);
   }
 
   // Close any open panel when the user clicks outside the header.

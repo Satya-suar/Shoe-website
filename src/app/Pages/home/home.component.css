@@ -1,1 +1,131 @@
-/* page-level spacing handled inside each section */
+/* ===== Why ShoeKart: black cards, red accents ===== */
+.why-shoe-kart {
+  padding: clamp(40px, 6vw, 72px) 0;
+  background: #cccccc;
+  color: #15141a;
+}
+
+/* heading */
+.why-shoe-kart .section-head { margin-bottom: 32px; padding-bottom: 20px; border-bottom: 1px solid #d9d7dd; }
+.why-shoe-kart .eyebrow {
+  display: flex; align-items: center; gap: 10px;
+  margin: 0 0 8px; color: #e0242f;
+  font-size: .72rem; font-weight: 800; letter-spacing: .2em; text-transform: uppercase;
+}
+.why-shoe-kart .eyebrow::before { content: ""; height: 2px; background: #e0242f; animation: lineGrow 2.4s ease-in-out infinite; }
+.why-shoe-kart .section-title { margin: 0; font-size: clamp(1.6rem, 3.4vw, 2.5rem); font-weight: 800; }
+
+@keyframes lineGrow { 0%, 100% { width: 18px; } 50% { width: 44px; } }
+
+/* ---------- Flip card ---------- */
+.why-card { display: block; perspective: 900px; text-decoration: none; color: inherit; }
+
+.why-inner {
+  position: relative;
+  height: 240px;
+  transform-style: preserve-3d;
+  transition: transform .7s cubic-bezier(.4, .2, .2, 1);
+}
+.why-card:hover .why-inner,
+.why-card:focus-visible .why-inner { transform: rotateY(180deg); }
+
+.why-face {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 22px;
+  border-radius: 6px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* ---------- Front ---------- */
+.why-front {
+  background: #17171a;
+  color: #f5f5f5;
+  border: 1px solid #2c2c31;
+  border-bottom: 3px solid #e0242f;
+}
+
+/* big outlined number */
+.why-num {
+  position: absolute; top: 12px; right: 16px;
+  font-size: 2rem; font-weight: 800; line-height: 1;
+  color: transparent; -webkit-text-stroke: 1px #3a3a40;
+}
+
+/* icon box (small square) with a pulsing red ring */
+.why-ic {
+  display: grid; place-items: center;
+  width: 56px; height: 56px; margin-bottom: 14px;
+  border: 1px solid #e0242f; border-radius: 6px;
+  background: rgba(224, 36, 47, .12);
+  color: #ff4a55; font-size: 1.6rem;
+  animation: ringPulse 2.4s ease-out infinite;
+}
+.why-ic i { display: inline-block; animation: iconFloat 3s ease-in-out infinite; }
+
+@keyframes ringPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(224, 36, 47, .5); }
+  70%  { box-shadow: 0 0 0 12px rgba(224, 36, 47, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(224, 36, 47, 0); }
+}
+@keyframes iconFloat {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50%      { transform: translateY(-4px) rotate(-6deg); }
+}
+
+.why-title { position: relative; margin: 0 0 8px; padding-bottom: 8px; color: #fff; font-size: 1.25rem; font-weight: 800; }
+.why-title::after {                      /* red line that breathes under the title */
+  content: ""; position: absolute; left: 0; bottom: 0; height: 2px; background: #e0242f;
+  animation: lineGrow 2.4s ease-in-out infinite;
+}
+.why-text { margin: 0; color: #a9a9b2; font-size: .9rem; line-height: 1.55; }
+
+/* ---------- Back ---------- */
+.why-back {
+  align-items: center; text-align: center;
+  transform: rotateY(180deg);
+  background: linear-gradient(135deg, #e0242f, #a8141d);
+  color: #fff;
+}
+
+.why-back-ic { display: inline-block; margin-bottom: 8px; font-size: 2.2rem; }
+.why-back-title { margin: 0 0 12px; font-size: 1.3rem; font-weight: 800; text-transform: uppercase; }
+.why-back-cta {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 16px; border-radius: 4px;
+  background: #fff; color: #e0242f; font-size: .82rem; font-weight: 700;
+}
+.why-back-cta i { display: inline-block; }
+
+/* back content animates in after the flip */
+.why-card:hover .why-back-ic { animation: popIn .6s .25s both; }
+.why-card:hover .why-back-title { animation: riseIn .5s .35s both; }
+.why-card:hover .why-back-cta { animation: riseIn .5s .45s both; }
+.why-card:hover .why-back-cta i { animation: nudge 1s .9s ease-in-out infinite; }
+
+@keyframes popIn {
+  0%   { opacity: 0; transform: scale(.3) rotate(-30deg); }
+  70%  { transform: scale(1.2) rotate(8deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0); }
+}
+@keyframes riseIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes nudge {
+  0%, 100% { transform: translateX(0); }
+  50%      { transform: translateX(5px); }
+}
+
+/* ---------- Small screens ---------- */
+@media (max-width: 575.98px) {
+  .why-inner { height: 210px; }
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .why-shoe-kart *, .why-shoe-kart *::before, .why-shoe-kart *::after {
+    animation: none !important; transition: none !important;
+  }
+}

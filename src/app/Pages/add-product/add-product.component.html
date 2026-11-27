@@ -1,153 +1,106 @@
-<form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="premium-form">
+<section class="page-hero">
+  <div class="container">
+    <p class="crumbs"><a routerLink="/">Home</a> / <a routerLink="/products">Shop</a> / Add product</p>
+    <h1>Add new product</h1>
+    <p>Fill in the details to put a new pair in the store.</p>
+  </div>
+</section>
 
-    <h2>Add Product</h2>
+<section class="section-sm">
+  <div class="container">
+    <form class="row g-4" [formGroup]="productForm" (ngSubmit)="onSubmit()" novalidate>
 
-    <div class="grid">
+      <!-- Details -->
+      <div class="col-lg-8">
+        <div class="kart-card pad form-card">
+          <h2 class="card-title-kart">Product details</h2>
+          <div class="row g-3">
 
-        <!-- Brand -->
-        <div class="form-group">
-            <label>Brand</label>
+            <div class="col-md-6">
+              <label class="form-label" for="p-brand">Brand</label>
+              <select id="p-brand" class="form-select" formControlName="brandId"
+                [class.is-invalid]="productForm.get('brandId')?.touched && productForm.get('brandId')?.invalid">
+                <option value="">Select a brand</option>
+                @for (b of brands; track b.brandId) { <option [value]="b.brandId">{{ b.brandName }}</option> }
+              </select>
+              @if (productForm.get('brandId')?.touched && productForm.get('brandId')?.invalid) { <p class="field-error">Please select a brand.</p> }
+            </div>
 
-            <select formControlName="brandId">
-                <option value="">Select Brand</option>
+            <div class="col-md-6">
+              <label class="form-label" for="p-name">Product name</label>
+              <input id="p-name" class="form-control" formControlName="productName" placeholder="e.g. Air Runner"
+                [class.is-invalid]="productForm.get('productName')?.touched && productForm.get('productName')?.invalid">
+              @if (productForm.get('productName')?.touched && productForm.get('productName')?.invalid) { <p class="field-error">Enter at least 3 characters.</p> }
+            </div>
 
-                <option *ngFor="let brand of brands" [value]="brand.brandId">
-                    {{ brand.brandName }}
-                </option>
-            </select>
+            <div class="col-md-4">
+              <label class="form-label" for="p-size">Size</label>
+              <input id="p-size" type="number" class="form-control" formControlName="size" placeholder="e.g. 9"
+                [class.is-invalid]="productForm.get('size')?.touched && productForm.get('size')?.invalid">
+              @if (productForm.get('size')?.touched && productForm.get('size')?.invalid) { <p class="field-error">Enter a valid size.</p> }
+            </div>
 
-            <small *ngIf="productForm.get('brandId')?.touched &&
-                    productForm.get('brandId')?.invalid">
-                Brand is required
-            </small>
+            <div class="col-md-4">
+              <label class="form-label" for="p-color">Color</label>
+              <input id="p-color" class="form-control" formControlName="color" placeholder="e.g. Red"
+                [class.is-invalid]="productForm.get('color')?.touched && productForm.get('color')?.invalid">
+              @if (productForm.get('color')?.touched && productForm.get('color')?.invalid) { <p class="field-error">Color is required.</p> }
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label" for="p-price">Price (₹)</label>
+              <input id="p-price" type="number" class="form-control" formControlName="price" placeholder="e.g. 2999"
+                [class.is-invalid]="productForm.get('price')?.touched && productForm.get('price')?.invalid">
+              @if (productForm.get('price')?.touched && productForm.get('price')?.invalid) { <p class="field-error">Price must be at least 100.</p> }
+            </div>
+
+            <div class="col-12">
+              <label class="form-label" for="p-desc">Description</label>
+              <textarea id="p-desc" rows="4" class="form-control" formControlName="productDescription" placeholder="Describe the shoe"
+                [class.is-invalid]="productForm.get('productDescription')?.touched && productForm.get('productDescription')?.invalid"></textarea>
+              @if (productForm.get('productDescription')?.touched && productForm.get('productDescription')?.invalid) { <p class="field-error">Description is required.</p> }
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Image + options -->
+      <div class="col-lg-4">
+        <div class="kart-card pad form-card mb-4">
+          <h2 class="card-title-kart">Product image</h2>
+          <input #fileInput type="file" accept="image/*" hidden (change)="onFileSelected($event)">
+
+          @if (!imagePreview) {
+            <button type="button" class="upload-box" (click)="fileInput.click()">
+              <i class="bi bi-cloud-arrow-up"></i>
+              <strong>Upload image</strong>
+              <span>Click to choose a photo</span>
+            </button>
+          } @else {
+            <div class="preview-card">
+              <img [src]="imagePreview" alt="Product preview">
+              <button type="button" class="btn-kart btn-kart-dark sm" (click)="fileInput.click()"><i class="bi bi-arrow-repeat"></i> Replace</button>
+            </div>
+          }
+          @if (imageError) { <p class="field-error">Please upload a product image.</p> }
         </div>
 
-        <!-- Product Name -->
-        <div class="form-group">
-            <label>Product Name</label>
-
-            <input type="text" formControlName="productName" placeholder="Nike Air Max">
+        <div class="kart-card pad">
+          <h2 class="card-title-kart">Options</h2>
+          <div class="form-check form-switch mb-2"><input class="form-check-input" type="checkbox" role="switch" id="o-stock" formControlName="isStock"><label class="form-check-label" for="o-stock">In stock</label></div>
+          <div class="form-check form-switch mb-2"><input class="form-check-input" type="checkbox" role="switch" id="o-pop" formControlName="isPopular"><label class="form-check-label" for="o-pop">Show in popular products</label></div>
+          <div class="form-check form-switch"><input class="form-check-input" type="checkbox" role="switch" id="o-act" formControlName="isActive"><label class="form-check-label" for="o-act">Active</label></div>
         </div>
+      </div>
 
-        <!-- Size -->
-        <div class="form-group">
-            <label>Size</label>
-
-            <input type="text" formControlName="size" placeholder="9">
-        </div>
-
-        <!-- Color -->
-        <div class="form-group">
-            <label>Color</label>
-
-            <input type="text" formControlName="color" placeholder="Black">
-        </div>
-
-        <!-- Price -->
-        <div class="form-group">
-            <label>Price</label>
-
-            <input type="text" formControlName="price" placeholder="5999">
-        </div>
-
-        <!-- Image -->
-        <!-- Product Image -->
-
-<div class="form-group full-width">
-
-    <label>Product Image</label>
-
-    <!-- Upload Box -->
-
-    <div class="upload-box" *ngIf="!imagePreview">
-
-        <input
-            #productImageInput
-            type="file"
-            accept="image/*"
-            (change)="onFileSelected($event)">
-
-        <div class="upload-content">
-            <i class="bi bi-cloud-upload"></i>
-            <h4>Upload Product Image</h4>
-            <p>PNG, JPG or WEBP</p>
-        </div>
-
-    </div>
-
-    <!-- Preview -->
-
-    <div class="preview-card" *ngIf="imagePreview">
-
-        <img
-            [src]="imagePreview"
-            alt="Product Image">
-
-        <button
-            type="button"
-            class="replace-btn"
-            (click)="productImageInput.click()">
-
-            <i class="bi bi-arrow-repeat"></i>
-
+      <div class="col-12">
+        <button type="submit" class="btn-kart btn-glow btn-flip lg">
+          <span class="flip">
+            <span class="front"><i class="bi bi-plus-circle-fill"></i> Add product</span>
+            <span class="back"><i class="bi bi-lightning-charge-fill"></i> Publish it</span>
+          </span>
         </button>
-
-        <input
-            hidden
-            #productImageInput
-            type="file"
-            accept="image/*"
-            (change)="onFileSelected($event)">
-
-    </div>
-
-</div>
-
-    </div>
-
-    <!-- Image Preview -->
-
-    <div class="image-preview" *ngIf="imagePreview">
-        <img [src]="imagePreview">
-    </div>
-
-    <!-- Description -->
-
-    <div class="form-group full-width">
-        <label>Description</label>
-
-        <textarea rows="5" formControlName="productDescription"
-            placeholder="Write detailed product description..."></textarea>
-    </div>
-
-    <!-- Toggles -->
-
-    <div class="checkbox-row">
-
-        <label class="check-box">
-            <input type="checkbox" formControlName="isStock">
-            In Stock
-        </label>
-
-        <label class="check-box">
-            <input type="checkbox" formControlName="isPopular">
-            Popular Product
-        </label>
-
-        <label class="check-box">
-            <input type="checkbox" formControlName="isActive">
-            Active
-        </label>
-
-    </div>
-
-    <button
-  type="submit"
-  class="submit-btn"
-  [disabled]="!productForm.valid || selectedFile === null">
-
-  Save Product
-
-</button>
-
-</form>
+      </div>
+    </form>
+  </div>
+</section>

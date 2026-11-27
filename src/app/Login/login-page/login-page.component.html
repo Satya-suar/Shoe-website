@@ -1,0 +1,141 @@
+<section class="auth-page">
+
+  <!-- ============ Brand side (identical on login + register) ============ -->
+  <aside class="auth-brand" aria-hidden="false">
+    <div class="blob b1" aria-hidden="true"></div>
+    <div class="blob b2" aria-hidden="true"></div>
+    <div class="grid-lines" aria-hidden="true"></div>
+
+    <div class="diamonds" aria-hidden="true">
+      <span style="--x: 8%;  --s: 10px; --t: 15s; --d: 0s"></span>
+      <span style="--x: 22%; --s: 6px;  --t: 12s; --d: 3s"></span>
+      <span style="--x: 38%; --s: 14px; --t: 18s; --d: 1s"></span>
+      <span style="--x: 55%; --s: 8px;  --t: 13s; --d: 5s"></span>
+      <span style="--x: 70%; --s: 12px; --t: 16s; --d: 2s"></span>
+      <span style="--x: 84%; --s: 7px;  --t: 11s; --d: 6s"></span>
+      <span style="--x: 93%; --s: 11px; --t: 17s; --d: 4s"></span>
+    </div>
+
+    <a routerLink="/" class="brand-logo" aria-label="LuxeKart home">
+      <span class="logo-mark">LK</span>
+      <span class="logo-word">Luxe<em>Kart</em></span>
+    </a>
+
+    <div class="brand-center">
+      <div class="seal" aria-hidden="true">
+        <svg viewBox="0 0 220 220" class="seal-ring">
+          <defs><path id="sealArc" d="M110,110 m-86,0 a86,86 0 1,1 172,0 a86,86 0 1,1 -172,0" /></defs>
+          <circle cx="110" cy="110" r="106" class="r1" />
+          <circle cx="110" cy="110" r="64" class="r2" />
+          <text>
+            <textPath href="#sealArc" textLength="535" lengthAdjust="spacing">LUXEKART &#8226; AUTHENTICATED &#8226; PREMIUM &#8226; GENUINE &#8226; LUXEKART &#8226;</textPath>
+          </text>
+        </svg>
+        <span class="seal-core">LK</span>
+      </div>
+
+      <span class="eyebrow">Members' entrance</span>
+      <h1>
+        <span class="ln"><span>Welcome back</span></span>
+        <span class="ln"><span>to <em>luxury.</em></span></span>
+      </h1>
+
+      <p class="rot-line">
+        Discover
+        <span class="rotator">
+          <span class="rot-track">
+            <span>Watches</span>
+            <span>Handbags</span>
+            <span>Footwear</span>
+            <span>Fragrances</span>
+            <span>Jewellery</span>
+            <span>Watches</span>
+          </span>
+        </span>
+      </p>
+    </div>
+
+    <ul class="brand-perks">
+      <li style="--n: 0"><i class="bi bi-patch-check-fill"></i> 100% authenticated</li>
+      <li style="--n: 1"><i class="bi bi-truck"></i> Insured delivery</li>
+      <li style="--n: 2"><i class="bi bi-arrow-repeat"></i> 7-day returns</li>
+    </ul>
+  </aside>
+
+  <!-- ============ Form side ============ -->
+  <div class="auth-form-wrap">
+    <form class="auth-card" [class.shake]="error()" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+
+      <div class="card-top rv" style="--d: .05s">
+        <span class="card-icon"><i class="bi bi-person-lock"></i></span>
+        <div>
+          <span class="eyebrow">Sign in</span>
+          <h2>Your account</h2>
+        </div>
+      </div>
+      <p class="auth-sub rv" style="--d: .12s">Enter your details to continue.</p>
+
+      @if (expired) {
+        <div class="auth-alert info"><i class="bi bi-clock-history"></i> Your session expired. Please sign in again.</div>
+      }
+      @if (error()) {
+        <div class="auth-alert error" role="alert"><i class="bi bi-exclamation-octagon"></i> {{ error() }}</div>
+      }
+
+      <!-- email -->
+      <div class="cell rv" style="--d: .18s">
+        <div class="fld" [class.invalid]="f['email'].touched && f['email'].invalid">
+          <i class="bi bi-envelope"></i>
+          <input id="l-email" type="email" formControlName="email" autocomplete="email" placeholder=" ">
+          <label for="l-email">Email address</label>
+          <span class="bar"></span>
+        </div>
+        @if (f['email'].touched && f['email'].invalid) { <p class="field-error">Enter a valid email.</p> }
+      </div>
+
+      <!-- password -->
+      <div class="cell rv" style="--d: .25s">
+        <div class="fld" [class.invalid]="f['password'].touched && f['password'].invalid">
+          <i class="bi bi-lock"></i>
+          <input id="l-pass" [type]="showPassword() ? 'text' : 'password'" formControlName="password"
+            autocomplete="current-password" placeholder=" ">
+          <label for="l-pass">Password</label>
+          <button type="button" class="eye" [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'"
+            (click)="showPassword.set(!showPassword())">
+            <i class="bi" [class.bi-eye]="!showPassword()" [class.bi-eye-slash]="showPassword()"></i>
+          </button>
+          <span class="bar"></span>
+        </div>
+        @if (f['password'].touched && f['password'].invalid) { <p class="field-error">Password must be at least 6 characters.</p> }
+      </div>
+
+      <div class="auth-row rv" style="--d: .32s">
+        <label class="check">
+          <input type="checkbox" formControlName="remember">
+          <span class="box" aria-hidden="true"></span> Keep me signed in
+        </label>
+        <a routerLink="/contact" class="auth-link">Need help?</a>
+      </div>
+
+      <button type="submit" class="auth-btn rv" style="--d: .38s" [disabled]="loading()">
+        <span class="sheen" aria-hidden="true"></span>
+        @if (loading()) { <span class="spin"></span> Signing in... } @else { <span>Sign in</span> <i class="bi bi-arrow-right"></i> }
+      </button>
+
+      @if (useMock) {
+        <div class="demo-box rv" style="--d: .44s">
+          <div>
+            <strong>Demo mode</strong>
+            <small>{{ demo.email }} &nbsp;/&nbsp; {{ demo.password }}</small>
+          </div>
+          <button type="button" class="demo-fill" (click)="fillDemo()">Fill</button>
+        </div>
+      }
+
+      <div class="alt-row rv" style="--d: .5s">
+        <p class="auth-foot">New to LuxeKart? <a routerLink="/register" class="auth-link">Request an account</a></p>
+        <a routerLink="/products" class="guest-btn"><i class="bi bi-gem"></i> Continue as guest</a>
+      </div>
+    </form>
+  </div>
+</section>

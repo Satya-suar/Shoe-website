@@ -1,0 +1,121 @@
+/* ===== Custom cursor · small flat ring · Red / White / Black / Green =====
+   - No shadows, no glow, no blur
+   - The ring stays the same small size in every state
+   - White ring with a thin black outline, so it shows on light AND dark pages
+   - Colors only change: link = green, press = red, text field = red bar */
+
+:root {
+  --cur-red: #e10b1f;
+  --cur-green: #19d46b;
+  --cur-white: #ffffff;
+  --cur-black: #0a0a0a;
+}
+
+/* Hide the native cursor only when the custom one is running */
+html.lk-cursor-on,
+html.lk-cursor-on *,
+html.lk-cursor-on *::before,
+html.lk-cursor-on *::after {
+  cursor: none !important;
+}
+
+.lk-ring,
+.lk-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2147483647;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  will-change: transform;
+}
+
+.lk-ring.is-visible,
+.lk-dot.is-visible {
+  opacity: 1;
+}
+
+/* ---------- ring (small, fixed size) ---------- */
+
+.lk-ring-inner {
+  width: 18px;
+  height: 18px;
+  margin: -9px 0 0 -9px;
+  box-sizing: border-box;
+  border: 2px solid var(--cur-white);
+  border-radius: 50%;
+  background: transparent;
+  outline: 1.5px solid var(--cur-black); /* crisp outline, not a shadow */
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    border-radius 0.2s ease,
+    width 0.2s ease,
+    height 0.2s ease,
+    margin 0.2s ease;
+}
+
+.lk-ring-label {
+  display: none; /* no label bubble, the ring stays small */
+}
+
+/* over links & buttons: same size, turns green */
+.lk-ring.is-link .lk-ring-inner,
+.lk-ring.is-label .lk-ring-inner {
+  border-color: var(--cur-green);
+}
+
+/* pressed: turns red */
+.lk-ring.is-down .lk-ring-inner {
+  border-color: var(--cur-red);
+  background: var(--cur-red);
+}
+
+/* over text fields: thin red bar */
+.lk-ring.is-text .lk-ring-inner {
+  width: 3px;
+  height: 22px;
+  margin: -11px 0 0 -1.5px;
+  border: 0;
+  border-radius: 1px;
+  background: var(--cur-red);
+  outline: 1.5px solid var(--cur-white);
+}
+
+/* ---------- center dot ---------- */
+
+.lk-dot-inner {
+  width: 5px;
+  height: 5px;
+  margin: -2.5px 0 0 -2.5px;
+  border-radius: 50%;
+  background: var(--cur-red);
+  transition: background 0.2s ease, opacity 0.2s ease;
+}
+
+.lk-ring.is-link ~ .lk-dot .lk-dot-inner,
+.lk-ring.is-label ~ .lk-dot .lk-dot-inner {
+  background: var(--cur-green);
+}
+
+.lk-dot.is-down .lk-dot-inner,
+.lk-ring.is-text ~ .lk-dot .lk-dot-inner {
+  opacity: 0;
+}
+
+/* ---------- safety ---------- */
+
+@media (hover: none), (pointer: coarse) {
+  .lk-ring,
+  .lk-dot {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lk-ring-inner,
+  .lk-dot-inner {
+    transition: none;
+  }
+}

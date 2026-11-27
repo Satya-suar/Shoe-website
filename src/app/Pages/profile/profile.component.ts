@@ -1,16 +1,18 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { Location, NgTemplateOutlet } from '@angular/common';
+import { Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CartService } from '../../Common-Service/cart.service';
 import { ProfileService, UserProfile } from '../../Common-Service/profile.service';
 import { WishlistService } from '../../Common-Service/wishlist.service';
+import { InvoiceService } from '../../Common-Service/invoice.service';
+import { ToastService } from '../../Common-Service/toast.service';
 
 type View = 'home' | 'edit' | 'address';
 
 @Component({
   selector: 'app-profile',
-  imports: [FormsModule, RouterLink, NgTemplateOutlet],
+  imports: [FormsModule, RouterLink],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
 })
@@ -18,6 +20,8 @@ export class ProfileComponent {
   user = inject(ProfileService);
   cart = inject(CartService);
   wishlist = inject(WishlistService);
+  invoices = inject(InvoiceService);
+  private toast = inject(ToastService);
 
   private route = inject(ActivatedRoute);
   private router = inject(Router);
@@ -33,7 +37,6 @@ export class ProfileComponent {
     return titles[this.view()];
   });
 
-  notice = signal('');
   photoError = signal('');
 
   draft: UserProfile = { ...this.user.profile() };
@@ -42,14 +45,14 @@ export class ProfileComponent {
   newAddress = { label: 'Home', line: '', city: '', pincode: '' };
   addressError = '';
 
-  // The six order shortcuts
+  // Shortcuts shown on the account overview
   tiles = [
-    { label: 'Pending payment', icon: 'bi-wallet2', tone: 'amber', link: '/orders', params: { status: 'pending' } },
-    { label: 'Delivered', icon: 'bi-truck', tone: 'green', link: '/orders', params: { status: 'delivered' } },
-    { label: 'Processing', icon: 'bi-box-seam', tone: 'blue', link: '/orders', params: { status: 'processing' } },
-    { label: 'Cancelled', icon: 'bi-x-circle', tone: 'slate', link: '/orders', params: { status: 'cancelled' } },
-    { label: 'Wishlist', icon: 'bi-heart', tone: 'rose', link: '/wishlist', params: {} },
-    { label: 'Customer care', icon: 'bi-headset', tone: 'violet', link: '/help-center', params: {} }
+    { label: 'My orders', icon: 'bi-box2', link: '/orders', params: {} },
+    { label: 'Wishlist', icon: 'bi-heart', link: '/wishlist', params: {} },
+    { label: 'Cart', icon: 'bi-bag', link: '/cart', params: {} },
+    { label: 'Addresses', icon: 'bi-geo-alt', link: '/profile', params: { tab: 'address' } },
+    { label: 'Settings', icon: 'bi-gear', link: '/settings', params: {} },
+    { label: 'Help center', icon: 'bi-headset', link: '/help-center', params: {} }
   ];
 
   constructor() {
@@ -170,8 +173,12 @@ export class ProfileComponent {
     this.router.navigate(['/']);
   }
 
+  removeAddress(id: number): void {
+    this.user.removeAddress(id);
+    this.showNotice('Address removed');
+  }
+
   private showNotice(message: string): void {
-    this.notice.set(message);
-    setTimeout(() => this.notice.set(''), 2500);
+    this.toast.show(message);
   }
 }

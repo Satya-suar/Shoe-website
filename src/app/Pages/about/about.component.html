@@ -1,0 +1,107 @@
+<!-- ================= BANNER ================= -->
+<section class="page-hero">
+  <div class="hero-glow" aria-hidden="true"></div>
+  <div class="container position-relative">
+    <p class="crumbs"><a routerLink="/">Home</a> / About us</p>
+    <h1>Shoes for people<br>on the move</h1>
+    <p class="hero-sub">ShoeKart is a Bhubaneswar-based shoe store built around fresh pairs and honest prices.</p>
+  </div>
+</section>
+
+<!-- ================= STORY ================= -->
+<section class="ab-section light">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6" appReveal revealFrom="left">
+        <p class="eyebrow">Our story</p>
+        <h2 class="section-title">Fresh pairs, no filler</h2>
+        <p class="story-text mt-4">We started ShoeKart because buying shoes online should be simple: good brands, clear prices and the details you actually need, like size, color and whether a pair is in stock.</p>
+        <p class="story-text">We add new stock every week and keep the store easy to browse, so you can spend less time scrolling and more time walking.</p>
+        <a routerLink="/products" class="btn-red mt-2"><i class="bi bi-bag-check"></i> Shop the collection</a>
+      </div>
+
+      <div class="col-lg-6" appReveal revealFrom="right">
+        <div class="about-visual">
+          <div class="about-glow"></div>
+          <div class="about-quote">
+            <i class="bi bi-quote q"></i>
+            <p>Walk fast, stand out.</p>
+            <small>The ShoeKart idea in four words</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= VALUES (flip cards) ================= -->
+<section class="ab-section dark">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow">What we stand for</p>
+      <h2 class="section-title">Our values</h2>
+    </div>
+
+    <div class="row g-3 g-lg-4">
+      @for (v of values; track v.title; let i = $index) {
+        <div class="col-12 col-sm-6 col-lg-3" appReveal [revealDelay]="i * 100">
+          <div class="val-card" tabindex="0">
+            <div class="val-inner">
+
+              <div class="val-face val-front">
+                <span class="val-num">0{{ i + 1 }}</span>
+                <span class="val-ic"><i [class]="'bi ' + v.icon"></i></span>
+                <h3 class="val-title">{{ v.title }}</h3>
+                <p class="val-text">{{ v.text }}</p>
+              </div>
+
+              <div class="val-face val-backface" aria-hidden="true">
+                <i [class]="'bi ' + v.icon + ' val-back-ic'"></i>
+                <p class="val-back">{{ v.back }}</p>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ================= HOW IT WORKS ================= -->
+<section class="ab-section light">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow">Simple by design</p>
+      <h2 class="section-title">How ShoeKart works</h2>
+    </div>
+
+    <div class="row g-3 g-lg-4">
+      @for (s of steps; track s.n; let i = $index) {
+        <div class="col-md-4" appReveal [revealDelay]="i * 120">
+          <div class="step-card h-100">
+            <span class="step-n">{{ s.n }}</span>
+            <h3>{{ s.title }}</h3>
+            <p class="mb-0">{{ s.text }}</p>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ================= CTA ================= -->
+<section class="cta-wrap">
+  <div class="container">
+    <div class="about-cta" appReveal>
+      <div>
+        <h2>Questions? We're here.</h2>
+        <p class="mb-0">Reach out and a real person will get back to you.</p>
+      </div>
+      <div class="d-flex flex-wrap gap-2">
+        <a routerLink="/contact" class="btn-white"><i class="bi bi-chat-dots"></i> Contact us</a>
+        <a routerLink="/help-center" class="btn-ghost"><i class="bi bi-life-preserver"></i> Help center</a>
+      </div>
+    </div>
+  </div>
+</section>

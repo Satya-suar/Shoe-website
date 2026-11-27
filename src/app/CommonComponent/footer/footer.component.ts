@@ -35,6 +35,7 @@ interface Ember { x: number; y: number; r: number; vy: number; ph: number; a: nu
 export class FooterComponent implements AfterViewInit, OnDestroy {
   @ViewChild('footer') footerRef!: ElementRef<HTMLElement>;
   @ViewChild('fx') canvasRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('wordspace') wordRef!: ElementRef<HTMLElement>;
 
   private platformId = inject(PLATFORM_ID);
   private zone = inject(NgZone);
@@ -43,7 +44,40 @@ export class FooterComponent implements AfterViewInit, OnDestroy {
   inView = signal(false);
 
   year = new Date().getFullYear();
-  brandLetters = 'ShoeKart'.split('');
+
+  /* ---------- brand (change the name here and everything updates) ---------- */
+  readonly brandName = 'LuxeKart';
+  readonly brandMark = 'LK';
+  brandLetters = this.brandName.split('');
+  private readonly WORD = this.brandName.toUpperCase();
+
+  /* ---------- content ---------- */
+  collections = [
+    { label: 'Watches', slug: 'watches' },
+    { label: 'Handbags', slug: 'handbags' },
+    { label: 'Footwear', slug: 'footwear' },
+    { label: 'Fragrances', slug: 'fragrances' },
+    { label: 'Jewellery', slug: 'jewellery' },
+    { label: 'Apparel', slug: 'apparel' },
+  ];
+
+  /** words that scroll across the top of the footer (list is doubled for a seamless loop) */
+  private tickerItems = ['Watches', 'Handbags', 'Footwear', 'Fragrances', 'Jewellery', 'Apparel', 'Accessories', 'Eyewear'];
+  tickerLoop = [...this.tickerItems, ...this.tickerItems];
+
+  trust = [
+    { icon: 'bi-patch-check-fill', title: '100% Authentic', sub: 'Verified by experts' },
+    { icon: 'bi-truck', title: 'Insured Delivery', sub: 'Free on premium orders' },
+    { icon: 'bi-arrow-repeat', title: 'Easy Returns', sub: '7-day hassle-free' },
+    { icon: 'bi-shield-lock-fill', title: 'Secure Payments', sub: 'Encrypted checkout' },
+  ];
+
+  payments = [
+    { icon: 'bi-credit-card-2-front-fill', label: 'Cards' },
+    { icon: 'bi-phone-fill', label: 'UPI' },
+    { icon: 'bi-bank2', label: 'Net banking' },
+    { icon: 'bi-wallet2', label: 'Wallets' },
+  ];
 
   socials = [
     { label: 'Facebook', icon: 'bi-facebook', url: '#' },
@@ -53,8 +87,14 @@ export class FooterComponent implements AfterViewInit, OnDestroy {
     { label: 'WhatsApp', icon: 'bi-whatsapp', url: '#' },
   ];
 
+  scrollTop(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    window.scrollTo({ top: 0, behavior: this.reduced ? 'auto' : 'smooth' });
+  }
+
   /* ---------- particle engine state ---------- */
   private io?: IntersectionObserver;
+  private io2?: IntersectionObserver;
   private ro?: ResizeObserver;
   private raf = 0;
   private started = false;
@@ -76,8 +116,6 @@ export class FooterComponent implements AfterViewInit, OnDestroy {
   private my = -9999;
   private resizeTimer?: ReturnType<typeof setTimeout>;
 
-  private readonly WORD = 'SHOEKART';
-
   ngAfterViewInit(): void {
     if (!isPlatformBrowser(this.platformId)) {
       this.inView.set(true);
@@ -92,25 +130,36 @@ export class FooterComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
+    // 1) reveal the text and icons as soon as ANY part of the footer is on screen
+    //    (the footer is tall now, so a "20% visible" rule could never be reached on small screens)
     this.io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
           this.visible = e.isIntersecting;
-          if (e.intersectionRatio >= 0.2 && !this.started) {
+          if (e.isIntersecting && !this.inView()) {
             this.zone.run(() => this.inView.set(true));
-            this.start();
           }
         }
       },
-      { threshold: [0, 0.2] }
+      { threshold: 0 }
     );
     this.io.observe(this.footerRef.nativeElement);
+
+    // 2) start the particle name once its strip at the very bottom is visible
+    this.io2 = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting) && !this.started) this.start();
+      },
+      { threshold: 0.15 }
+    );
+    this.io2.observe(this.wordRef.nativeElement);
   }
 
   ngOnDestroy(): void {
     cancelAnimationFrame(this.raf);
     clearTimeout(this.resizeTimer);
     this.io?.disconnect();
+    this.io2?.disconnect();
     this.ro?.disconnect();
     const f = this.footerRef?.nativeElement;
     f?.removeEventListener('pointermove', this.onMove);
@@ -174,7 +223,7 @@ export class FooterComponent implements AfterViewInit, OnDestroy {
   };
 
   /* =====================================================
-     Build: sample the word "SHOEKART" into particle targets
+     Build: sample the brand word into particle targets
      ===================================================== */
   private build(skipIntro: boolean) {
     const footer = this.footerRef.nativeElement;
